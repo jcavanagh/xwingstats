@@ -1,0 +1,32 @@
+<div class="dice-roller row">
+	<div class="form col-xs-2">
+		<div class="form-group">
+			<label for="attack">Attack</label>
+			<input type="text" class="form-control" id="attack" placeholder="Attack" can-value="attack">
+		</div>
+		<div class="form-group">
+			<label for="defense">Defense</label>
+			<input type="text" class="form-control" id="defense" placeholder="Defense" can-value="defense">
+		</div>
+	</div>
+	<div class="results-table col-xs-5">
+		<table class="table">
+			<thead>
+				<tr>
+					<td># Hits</td>
+					<td>% Chance</td>
+			</thead>
+			<tbody>
+			{{#each series}}
+				<tr>
+					<td>{{.0}}</td>
+					<td>{{.1}}</td>
+				</tr>
+			{{/each}}	
+			</tbody>
+		</table>
+	</div>
+	<div class="results-chart col-xs-5">
+		<x-chart series={series} width={width} height={height}></x-chart>
+	</div>
+</div>
