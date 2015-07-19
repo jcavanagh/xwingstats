@@ -18,6 +18,18 @@ export default can.Component.extend({
 			defense: {
 				value: null,
 				type: 'number'
+			},
+			atkFocus: {
+				value: false,
+				type: 'boolean'
+			},
+			defFocus: {
+				value: false,
+				type: 'boolean'
+			},
+			defEvade: {
+				value: false,
+				type: 'boolean'
 			}
 		},
 
@@ -29,12 +41,21 @@ export default can.Component.extend({
 	events: {
 		calculate: function() {
 			if(this.viewModel.attack != null && this.viewModel.defense != null) {
-				var series = dice.getCombatSeries(this.viewModel.attack, this.viewModel.defense);
+				var series = dice.getCombatSeries(
+					this.viewModel.attack,
+					this.viewModel.defense,
+					this.viewModel.atkFocus,
+					this.viewModel.defFocus,
+					this.viewModel.defEvade
+				);
 				this.viewModel.attr('series', series);
 			}
 		},
 
 		'{viewModel} attack': 'calculate',
-		'{viewModel} defense': 'calculate'
+		'{viewModel} defense': 'calculate',
+		'{viewModel} atkFocus': 'calculate',
+		'{viewModel} defFocus': 'calculate',
+		'{viewModel} defEvade': 'calculate'
 	}
 });

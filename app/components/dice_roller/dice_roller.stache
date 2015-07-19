@@ -8,6 +8,18 @@
 			<label for="defense">Defense</label>
 			<input type="text" class="form-control" id="defense" placeholder="Defense" can-value="defense">
 		</div>
+		<label class="checkbox">
+			<input type="checkbox" value="" can-value="atkFocus">
+			Attacker Focus
+		</label>
+		<label class="checkbox">
+			<input type="checkbox" value="" can-value="defFocus">
+			Defender Focus
+		</label>
+		<label class="checkbox">
+			<input type="checkbox" value="" can-value="defEvade">
+			Defender Evade
+		</label>
 	</div>
 	<div class="results-table col-xs-5">
 		<table class="table">

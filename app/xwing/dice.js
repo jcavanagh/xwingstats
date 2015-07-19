@@ -21,33 +21,42 @@ var defend = {
 /**
  * Calculates a series of hit probabilities in a simple opposed atk/def die roll
  *
- * @param  {Number} atkDice Number of attack dice
- * @param  {Number} defDice Number of defense dice
- * @return {Array}          Array of ordered pairs [# hits, probability]
+ * @param  {Number} atkDice     Number of attack dice
+ * @param  {Number} defDice     Number of defense dice
+ * @param  {Boolean} atkFocus   If the attacker has a Focus token
+ * @param  {Boolean} defFocus   If the defender has a Focus token
+ * @param  {Boolean} defEvade   If the defender has an Evade token
+ * @return {Array}              Array of ordered pairs [# hits, probability]
  */
-export function getCombatSeries(atkDice, defDice) {
+export function getCombatSeries(atkDice, defDice, atkFocus, defFocus, defEvade) {
 	//Upper bound on hits is number of attack dice
 	return _.times(atkDice + 1, function(index) {
-		return [ index, getHitChance(index, atkDice, defDice) ];
+		return [ index, getHitChance(index, atkDice, defDice, atkFocus, defFocus, defEvade) ];
 	});
 }
 
 /**
  * Determines the probability of a specific number of hits with an opposed die roll
  *
- * @param  {Number} targetHits Target number of hits
- * @param  {Number} atkDice    Number of attack dice
- * @param  {Number} defDice    Number of defense dice
- * @return {Number}            Probability of given number of hits
+ * @param  {Number}  targetHits Target number of hits
+ * @param  {Number}  atkDice    Number of attack dice
+ * @param  {Number}  defDice    Number of defense dice
+ * @param  {Boolean} atkFocus   If the attacker has a Focus token
+ * @param  {Boolean} defFocus   If the defender has a Focus token
+ * @param  {Boolean} defEvade   If the defender has an Evade token
+ * @return {Number}             Probability of given number of hits
  */
-export function getHitChance(targetHits, atkDice, defDice) {
+export function getHitChance(targetHits, atkDice, defDice, atkFocus, defFocus, defEvade) {
 	//Calculate chances for specific numbers of hits/evades
+	var modifiedHitChance = attack.hitOrCrit + (atkFocus ? attack.focus : 0);
+	var modifiedEvadeChance = defend.evade + (defFocus ? defend.focus : 0);
+
 	var hits = _.times(atkDice + 1, function(index) {
-		return stats.binomialExperiment(atkDice, index, attack.hitOrCrit, 1 - attack.hitOrCrit);
+		return stats.binomialExperiment(atkDice, index, modifiedHitChance, 1 - modifiedHitChance);
 	});
 
 	var evades = _.times(defDice + 1, function(index) {
-		return stats.binomialExperiment(defDice, index, defend.evade, 1 - defend.evade);
+		return stats.binomialExperiment(defDice, index, modifiedEvadeChance, 1 - modifiedEvadeChance);
 	});
 
 	//The possibility for a hit at a particular point is the chance that they hit AND do not evade
@@ -56,6 +65,11 @@ export function getHitChance(targetHits, atkDice, defDice) {
 		//The probability of a particular hit count is the sum of probabilities for that
 		//hit quantity at each level of evasion
 		return _.sum(_.map(evades, function(evadeChance, evadeIndex) {
+			//Our minimum amount of evades is 1
+			if(defEvade) {
+				evadeIndex += 1;
+			}
+
 			//Zero is an edge case - counts if hits are zero OR hits <= evades
 			var isZeroHit = targetHits === 0 && hitIndex <= evadeIndex;
 			//Otherwise, counts if hits - evades == target
