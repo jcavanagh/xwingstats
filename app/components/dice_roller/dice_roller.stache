@@ -2,22 +2,22 @@
 	<div class="form col-xs-2">
 		<div class="form-group">
 			<label for="attack">Attack</label>
-			<input type="text" class="form-control" id="attack" placeholder="Attack" can-value="attack">
+			<input type="text" class="form-control" id="attack" placeholder="Attack" can-value="attacker.attack">
 		</div>
 		<div class="form-group">
 			<label for="defense">Defense</label>
-			<input type="text" class="form-control" id="defense" placeholder="Defense" can-value="defense">
+			<input type="text" class="form-control" id="defense" placeholder="Defense" can-value="defender.defense">
 		</div>
 		<label class="checkbox">
-			<input type="checkbox" value="" can-value="atkFocus">
+			<input type="checkbox" value="" can-value="attacker.focus">
 			Attacker Focus
 		</label>
 		<label class="checkbox">
-			<input type="checkbox" value="" can-value="defFocus">
+			<input type="checkbox" value="" can-value="defender.focus">
 			Defender Focus
 		</label>
 		<label class="checkbox">
-			<input type="checkbox" value="" can-value="defEvade">
+			<input type="checkbox" value="" can-value="defender.evade">
 			Defender Evade
 		</label>
 	</div>
@@ -26,13 +26,15 @@
 			<thead>
 				<tr>
 					<td># Hits</td>
-					<td>% Chance</td>
+					<td>% Exact</td>
+					<td>% At Least</td>
 			</thead>
 			<tbody>
 			{{#each series}}
 				<tr>
 					<td>{{.0}}</td>
-					<td>{{.1}}</td>
+					<td>{{formatPct .1}}</td>
+					<td>{{atLeast .0 ../series}}</td>
 				</tr>
 			{{/each}}	
 			</tbody>
