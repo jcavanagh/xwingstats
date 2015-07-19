@@ -1,0 +1,3 @@
+<div class="app container">
+	<x-dice-roller></x-dice-roller>
+</div>
