@@ -27,7 +27,8 @@
   "system": {
     "paths": {
       "can": "bower_components/canjs/steal/can/can.js",
-      "can/*": "bower_components/canjs/steal/can/*.js"
+      "can/*": "bower_components/canjs/steal/can/*.js",
+      "bootstrap": "bower_components/bootstrap/dist/js/bootstrap.min.js"
     },
     "ext": {
       "stache": "can/view/stache/system"

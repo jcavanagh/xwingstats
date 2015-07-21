@@ -55,7 +55,7 @@
     "no-comma-dangle": 1,         // disallow trailing commas in object literals
     "no-cond-assign": 0,          // disallow assignment in conditional expressions
     "no-console": 0,              // disallow use of console (off by default in the node environment)
-    "no-constant-condition": 1,   // disallow use of constant expressions in conditions
+    "no-constant-condition": 0,   // disallow use of constant expressions in conditions
     "no-control-regex": 1,        // disallow control characters in regular expressions
     "no-debugger": 2,             // disallow use of debugger
     "no-dupe-keys": 2,            // disallow duplicate keys when creating object literals

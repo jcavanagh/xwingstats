@@ -1,0 +1,193 @@
+<div class="combat-simulator row">
+<div class="combat-simulator-config row">
+	<div class="squad1-table panel col-xs-6">
+		<table class="table table-striped">
+			<caption>
+				Squad 1
+				<input type="button" class="btn btn-sm btn-primary" value="+" data-toggle="modal" data-target="#shipAddModal"></input>
+			</caption>
+			<thead>
+				<tr>
+					<td>Ship ID</td>
+					<td>Attack</td>
+					<td>Defense</td>
+					<td>Hull</td>
+					<td>Shield</td>
+					<td>{{! Delete button }}</td>
+				</tr>
+			</thead>
+			<tbody>
+			{{#each squad1.ships}}
+				<tr>
+					<td>{{id}}</td>
+					<td>{{base.attack}}</td>
+					<td>{{base.defense}}</td>
+					<td>{{base.hull}}</td>
+					<td>{{base.shield}}</td>
+					<td>
+						<button type="button" class="btn btn-default btn-xs" can-click="removeShip squad1 .">&times;</button>
+					</td>
+				</tr>
+			{{/each}}
+			</tbody>
+		</table>
+	</div>
+	<div class="squad2-table panel col-xs-6">
+		<table class="table table-striped">
+			<caption>
+				Squad 2
+				<input type="button" class="btn btn-sm btn-primary" value="+" data-toggle="modal" data-target="#shipAddModal"></input>
+			</caption>
+			<thead>
+				<tr>
+					<td>Ship ID</td>
+					<td>Attack</td>
+					<td>Defense</td>
+					<td>Hull</td>
+					<td>Shield</td>
+					<td>{{! Delete button }}</td>
+				</tr>
+			</thead>
+			<tbody>
+			{{#each squad2.ships}}
+				<tr>
+					<td>{{id}}</td>
+					<td>{{base.attack}}</td>
+					<td>{{base.defense}}</td>
+					<td>{{base.hull}}</td>
+					<td>{{base.shield}}</td>
+					<td>
+						<button type="button" class="btn btn-default btn-xs" can-click="removeShip squad2 .">&times;</button>
+					</td>
+				</tr>
+			{{/each}}
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="combat-simulator-combat-data row">
+	<div class="combat-data-table panel col-xs-8">
+		<table class="table table-striped">
+			<caption>Stats</caption>
+			<thead>
+				<tr>
+					<td>Squad ID</td>
+					<td>Metric</td>
+					<td>Mean</td>
+					<td>Median</td>
+					<td>Std. Dev.</td>
+					<td>Variance</td>
+				</tr>
+			</thead>
+			<tbody>
+				{{#combatData}}
+					{{#each .}}
+					<tr>
+						<td>{{squadId}}</td>
+						<td>{{@key}}</td>
+						<td>{{formatNum mean}}</td>
+						<td>{{formatNum median}}</td>
+						<td>{{formatNum stdDev}}</td>
+						<td>{{formatNum variance}}</td>
+					</tr>
+					{{/each}}
+				{{/combatData}}
+			</tbody>
+		</table>
+	</div>
+	<div class="combat-options panel form-horizontal col-xs-4">
+		 <div class="form-group">
+			<label class="col-xs-3 control-label" for="iterations">Iterations</label>
+			<div class="col-xs-9">
+			   <input type="text" class="form-control" id="iterations" placeholder="Iterations" can-value="options.iterations">
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="radio col-xs-12">
+				<label class="radio-inline">
+					<input type="radio" name="focusFireRadio" id="focusFireRadio1" value="random" can-value="options.fireMode">
+					Fire at random
+				</label>
+			</div>
+			<div class="radio col-xs-12">
+				<label class="radio-inline">
+					<input type="radio" name="focusFireRadio" id="focusFireRadio2" value="weakest" can-value="options.fireMode">
+					Focus Fire Weakest Enemy
+				</label>
+			</div>
+			<div class="radio col-xs-12">
+				<label class="radio-inline">
+					<input type="radio" name="focusFireRadio" id="focusFireRadio3" value="strongest" can-value="options.fireMode">
+					Focus Fire Strongest Enemy
+				</label>
+			</div>
+			<div class="radio col-xs-12">
+				<label class="radio-inline">
+					<input type="radio" name="focusFireRadio" id="focusFireRadio4" value="maximize" can-value="options.fireMode">
+					Maximize Hit Chance
+				</label>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<input type="button" class="btn btn-default" value="View Log" data-toggle="modal" data-target="#logModal"></input>
+			<input class="btn btn-primary" type="submit" value="Simulate">
+		</div>
+	</div>
+</div>
+</div>
+
+<div class="modal" id="shipAddModal" tabindex="-1" role="dialog">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal"><span >&times;</span></button>
+		<h4 class="modal-title" id="shipModalLabel">Add Ship</h4>
+	</div>
+	<div class="modal-body">
+		<form class="form">
+		<div class="form-group">
+			<label for="ship-add-pilot-skill" class="control-label">Pilot Skill</label>
+			<input type="text" class="form-control" id="ship-add-pilot-skill" can-value="modal.ship.pilotSkill">
+		</div>
+		<div class="form-group">
+			<label for="ship-add-attack" class="control-label">Attack</label>
+			<input type="text" class="form-control" id="ship-add-attack" can-value="modal.ship.attack">
+		</div>
+		<div class="form-group">
+			<label for="ship-add-defense" class="control-label">Agility</label>
+			<input type="text" class="form-control" id="ship-add-defense" can-value="modal.ship.defense">
+		</div>
+		<div class="form-group">
+			<label for="ship-add-shield" class="control-label">Shield</label>
+			<input type="text" class="form-control" id="ship-add-shield" can-value="modal.ship.shield">
+		</div>
+		<div class="form-group">
+			<label for="ship-add-hull" class="control-label">Hull</label>
+			<input type="text" class="form-control" id="ship-add-hull" can-value="modal.ship.hull">
+		</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<input type="button" class="btn btn-default" data-dismiss="modal" value="Close"></input>
+		<input type="submit" class="btn btn-primary" value="Add Ship"></input>
+	</div>
+</div>
+</div>
+</div>
+
+<div class="modal" id="logModal" tabindex="-1" role="dialog">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal"><span >&times;</span></button>
+		<h4 class="modal-title" id="shipModalLabel">Combat Log</h4>
+	</div>
+	<div class="modal-body">
+		<pre>{{stringifyLog}}</pre>
+	</div>
+	<div class="modal-footer">
+		<input type="button" class="btn btn-default" data-dismiss="modal" value="Close"></input>
+	</div>
+</div>
+</div>
+</div>

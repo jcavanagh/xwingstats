@@ -1,3 +1,4 @@
 <div class="app container">
 	<x-dice-roller></x-dice-roller>
+	<x-combat-simulator></x-combat-simulator>
 </div>

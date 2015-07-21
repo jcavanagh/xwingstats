@@ -1,36 +1,42 @@
 <div class="dice-roller row">
-	<div class="form col-xs-2">
+	<div class="form-horizontal panel col-xs-2">
 		<div class="form-group">
-			<label for="attack">Attack</label>
-			<input type="text" class="form-control" id="attack" placeholder="Attack" can-value="attacker.attack">
+			<label class="col-xs-4 control-label" for="attack">Attack</label>
+			<div class="col-xs-8">
+				<input type="text" class="form-control" id="attack" placeholder="Attack" can-value="attacker.current.attack">
+			</div>
 		</div>
 		<div class="form-group">
-			<label for="defense">Defense</label>
-			<input type="text" class="form-control" id="defense" placeholder="Defense" can-value="defender.defense">
+			<label class="col-xs-4 control-label" for="defense">Defense</label>
+			<div class="col-xs-8">
+				<input type="text" class="form-control" id="defense" placeholder="Defense" can-value="defender.current.defense">
+			</div>
 		</div>
-		<label class="checkbox">
-			<input type="checkbox" value="" can-value="attacker.focus">
+		<label class="checkbox col-xs-offset-2 col-xs-10">
+			<input type="checkbox" can-value="attacker.current.focus">
 			Attacker Focus
 		</label>
-		<label class="checkbox">
-			<input type="checkbox" value="" can-value="defender.focus">
+		<label class="checkbox col-xs-offset-2 col-xs-10">
+			<input type="checkbox" can-value="defender.current.focus">
 			Defender Focus
 		</label>
-		<label class="checkbox">
-			<input type="checkbox" value="" can-value="defender.evade">
+		<label class="checkbox col-xs-offset-2 col-xs-10">
+			<input type="checkbox" can-value="defender.current.evade">
 			Defender Evade
 		</label>
 	</div>
-	<div class="results-table col-xs-5">
-		<table class="table">
+	<div class="results-table panel col-xs-5">
+		<table class="table table-striped">
 			<thead>
 				<tr>
 					<td># Hits</td>
 					<td>% Exact</td>
 					<td>% At Least</td>
+				</tr>
 			</thead>
 			<tbody>
 			{{#each series}}
+			{{log}}
 				<tr>
 					<td>{{.0}}</td>
 					<td>{{formatPct .1}}</td>

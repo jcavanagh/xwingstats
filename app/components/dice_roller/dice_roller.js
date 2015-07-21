@@ -1,11 +1,11 @@
 import can from 'can';
 import diceRollerTemplate from './dice_roller.stache!';
 
-import chart from 'app/chart/chart';
+import Chart from 'app/chart/chart';
 
-import * as format from 'app/util/format';
+import * as Format from 'app/util/format';
 
-import * as dice from 'app/xwing/dice';
+import * as Dice from 'app/xwing/dice';
 import Ship from 'app/xwing/ship';
 
 export default can.Component.extend({
@@ -27,19 +27,19 @@ export default can.Component.extend({
 
 			//Comes in as ordered pairs, we only care about the second point
 			var hitChances = _.map(series(), function(s) { return s[1]; });
-			return format.percent(_.sum(_.takeRight(hitChances, hitChances.length - targetHits())));
+			return Format.percent(_.sum(_.takeRight(hitChances, hitChances.length - targetHits())));
 		},
 		formatPct: function(val) {
-			return format.percent(val);
+			return Format.percent(val);
 		}
 	},
 	events: {
 		calculate: function() {
-			var series = dice.getCombatSeries(this.viewModel.attacker, this.viewModel.defender);
+			var series = Dice.combatSeries(this.viewModel.attacker, this.viewModel.defender);
 			this.viewModel.attr('series', series);
 		},
 
-		'{viewModel.attacker} change': 'calculate',
-		'{viewModel.defender} change': 'calculate'
+		'{viewModel.attacker.current} change': 'calculate',
+		'{viewModel.defender.current} change': 'calculate'
 	}
 });

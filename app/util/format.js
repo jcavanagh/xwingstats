@@ -1,10 +1,17 @@
 export function percent(val, places) {
 	//It could be a compute
 	val = _.isFunction(val) ? val() : val;
-	places = places || 3
+
+	return number(val * 100) + '%';
+}
+
+export function number(val, places) {
+	//It could be a compute
+	val = _.isFunction(val) ? val() : val;
+	places = places || 3;
 
 	//Make it a string
-	var strVal = ''+(val * 100).toFixed(places);
+	var strVal = '' + val.toFixed(places);
 
 	//Trim zeroes, and the dot if we trimmed every digit after the decimal
 	strVal = _.trimRight(strVal, '0');
@@ -12,6 +19,5 @@ export function percent(val, places) {
 		strVal = strVal.slice(0, -1);
 	}
 
-	//Done!
-	return strVal + '%';
+	return strVal;
 }
