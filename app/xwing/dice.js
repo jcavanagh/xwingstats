@@ -22,12 +22,13 @@ var defend = {
  * Simulates a single attack against a defender
  * Hits are random according to the combat probability distribution
  *
- * @param  {Ship} attacker The attacking ship
- * @param  {Ship} defender The defending ship
- * @return {Number}        Number of hits inflicted
+ * @param  {Ship}   attacker The attacking ship
+ * @param  {Ship}   defender The defending ship
+ * @param  {Object} config   Combat configuration
+ * @return {Number}          Number of hits inflicted
  */
-export function singleCombat(attacker, defender) {
-	var series = combatSeries(attacker, defender);
+export function singleCombat(attacker, defender, config) {
+	var series = combatSeries(attacker, defender, config);
 	var rnd = Math.random();
 
 	//Find the probability band that the random number lies within
@@ -46,12 +47,13 @@ export function singleCombat(attacker, defender) {
 /**
  * Returns the expected number of hits between an attacker and defender
  *
- * @param  {Ship} attacker The attacking ship
- * @param  {Ship} defender The defending ship
- * @return {Number}        Expected hits
+ * @param  {Ship}   attacker The attacking ship
+ * @param  {Ship}   defender The defending ship
+ * @param  {Object} config   Combat configuration
+ * @return {Number}          Expected hits
  */
-export function averageCombatSeries(attacker, defender) {
-	var series = combatSeries(attacker, defender);
+export function averageCombatSeries(attacker, defender, config) {
+	var series = combatSeries(attacker, defender, config);
 
 	return _.reduce(series, function(accum, item) {
 		return accum + (item[0] * item[1]);
@@ -59,17 +61,28 @@ export function averageCombatSeries(attacker, defender) {
 }
 
 /**
- * Calculates a series of hit probabilities in a simple opposed atk/def die roll
+ * Calculates a series of hit/evade probabilities in a simple opposed atk/def die roll
  *
- * @param  {Ship} attacker The attacking ship
- * @param  {Ship} defender The defending ship
- * @return {Array}         Array of ordered pairs [# hits, probability]
+ * @param  {Ship}   attacker The attacking ship
+ * @param  {Ship}   defender The defending ship
+ * @param  {Object} config   Combat configuration
+ * @return {Array}           Array of ordered pairs [# hits, probability]
  */
-export function combatSeries(attacker, defender) {
-	//Upper bound on hits is number of attack dice
-	return _.times(attacker.current.attack + 1, function(index) {
-		return [ index, combatHitChance(index, attacker, defender) ];
+export function combatSeries(attacker, defender, config) {
+	var fn = combatHitChance;
+	var numDice = attacker.current.attack + 1;
+
+	if(config && config.invert) {
+		fn = combatEvadeChance;
+		numDice = defender.current.defense +1;
+	}
+
+	//Upper bound on hits/evades is number of attack/defense dice
+	var combatResults = _.times(numDice, function(index) {
+		return [ index, fn(index, attacker, defender, config) ];
 	});
+
+	return combatResults;
 }
 
 /**
@@ -80,18 +93,10 @@ export function combatSeries(attacker, defender) {
  * @param  {Ship}   defender   The defending ship
  * @return {Number}            Probability of given number of hits
  */
-export function combatHitChance(targetHits, attacker, defender) {
+export function combatHitChance(targetHits, attacker, defender, config) {
 	//Calculate chances for specific numbers of hits/evades
-	var modifiedHitChance = attack.hitOrCrit + (attacker.current.focus ? attack.focus : 0);
-	var modifiedEvadeChance = defend.evade + (defender.current.focus ? defend.focus : 0);
-
-	var hits = _.times(attacker.current.attack + 1, function(index) {
-		return Stats.binomialExperiment(attacker.current.attack, index, modifiedHitChance, 1 - modifiedHitChance);
-	});
-
-	var evades = _.times(defender.current.defense + 1, function(index) {
-		return Stats.binomialExperiment(defender.current.defense, index, modifiedEvadeChance, 1 - modifiedEvadeChance);
-	});
+	var hits = getHitSeries(attacker, config);
+	var evades = getEvadeSeries(defender, config);
 
 	//The possibility for a hit at a particular point is the chance that they hit AND do not evade
 	var combatResults = _.sum(_.map(hits, function(hitChance, hitIndex) {
@@ -117,4 +122,67 @@ export function combatHitChance(targetHits, attacker, defender) {
 	}));
 
 	return combatResults;
+}
+
+/**
+ * Determines the probability of a specific number of evades a ship will roll, with any modifiers the attacker might create
+ *
+ * @param  {Number} targetHits Target number of evades
+ * @param  {Ship}   attacker   The attacking ship
+ * @param  {Ship}   defender   The defending ship
+ * @return {Number}            Probability of given number of evades
+ */
+export function combatEvadeChance(targetEvades, attacker, defender, config) {
+	var modifiedEvadeChance = getModifiedEvadeChance(defender, config);
+	var evades = getEvadeSeries(defender, config);
+
+	return _.sum(_.map(evades, function(evadeChance, evadeIndex) {
+		if(defender.current.evade) {
+			evadeIndex += 1;
+		}
+		return evadeIndex === targetEvades ? evadeChance : 0;
+	}));
+}
+
+//Private helpers
+function getModifiedHitChance(ship, config) {
+	return attack.hitOrCrit + (attack.focus * getFocusModifier(ship));
+}
+
+function getModifiedEvadeChance(ship, config) {
+	return defend.evade + (defend.focus * getFocusModifier(ship));
+}
+
+function getHitSeries(ship, config) {
+	var modifiedHitChance = getModifiedHitChance(ship);
+	var atk = ship.current.attack;
+
+	return _.times(atk + 1, function(index) {
+		return Stats.binomialExperiment(atk, index, modifiedHitChance, 1 - modifiedHitChance);
+	});
+}
+
+function getEvadeSeries(ship, config) {
+	var modifiedEvadeChance = getModifiedEvadeChance(ship);
+	var def = ship.current.defense;
+
+	return _.times(def + 1, function(index) {
+		return Stats.binomialExperiment(def, index, modifiedEvadeChance, 1 - modifiedEvadeChance);
+	});
+}
+
+function getEvadeModifier(ship, config) {
+	if(_.isNumber(ship.current.evade)) {
+		return ship.current.evade;
+	}
+
+	return ship.current.evade ? 1 : 0;
+}
+
+function getFocusModifier(ship, config) {
+	if(_.isNumber(ship.current.focus)) {
+		return ship.current.focus;
+	}
+
+	return ship.current.focus ? 1 : 0;
 }

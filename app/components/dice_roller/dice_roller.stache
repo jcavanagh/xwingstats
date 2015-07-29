@@ -1,42 +1,51 @@
 <div class="dice-roller row">
-	<div class="form-horizontal panel col-xs-2">
-		<div class="form-group">
-			<label class="col-xs-4 control-label" for="attack">Attack</label>
-			<div class="col-xs-8">
-				<input type="text" class="form-control" id="attack" placeholder="Attack" can-value="attacker.current.attack">
+	<div class="col-xs-3">
+		<div class="row x-panel">
+			<label class="checkbox col-xs-offset-3 col-xs-10">
+				<input type="checkbox" can-value="config.invert">
+				Invert
+			</label>
+		</div>
+		<div class="row x-panel">
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-xs-4 control-label" for="attack">Attack</label>
+					<div class="col-xs-8">
+						<input type="text" class="form-control" id="attack" placeholder="Attack" can-value="attacker.current.attack" {{#config.invert}}disabled{{/config.invert}}>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-4 control-label" for="defense">Defense</label>
+					<div class="col-xs-8">
+						<input type="text" class="form-control" id="defense" placeholder="Defense" can-value="defender.current.defense">
+					</div>
+				</div>
+				<label class="checkbox col-xs-offset-3 col-xs-10">
+					<input type="checkbox" can-value="attacker.current.focus">
+					Attacker Focus
+				</label>
+				<label class="checkbox col-xs-offset-3 col-xs-10">
+					<input type="checkbox" can-value="defender.current.focus">
+					Defender Focus
+				</label>
+				<label class="checkbox col-xs-offset-3 col-xs-10">
+					<input type="checkbox" can-value="defender.current.evade">
+					Defender Evade
+				</label>
 			</div>
 		</div>
-		<div class="form-group">
-			<label class="col-xs-4 control-label" for="defense">Defense</label>
-			<div class="col-xs-8">
-				<input type="text" class="form-control" id="defense" placeholder="Defense" can-value="defender.current.defense">
-			</div>
-		</div>
-		<label class="checkbox col-xs-offset-2 col-xs-10">
-			<input type="checkbox" can-value="attacker.current.focus">
-			Attacker Focus
-		</label>
-		<label class="checkbox col-xs-offset-2 col-xs-10">
-			<input type="checkbox" can-value="defender.current.focus">
-			Defender Focus
-		</label>
-		<label class="checkbox col-xs-offset-2 col-xs-10">
-			<input type="checkbox" can-value="defender.current.evade">
-			Defender Evade
-		</label>
 	</div>
-	<div class="results-table panel col-xs-5">
+	<div class="results-table x-panel col-xs-5">
 		<table class="table table-striped">
 			<thead>
 				<tr>
-					<td># Hits</td>
+					<td># {{#config.invert}}Evades{{else}}Hits{{/config.invert}}</td>
 					<td>% Exact</td>
 					<td>% At Least</td>
 				</tr>
 			</thead>
 			<tbody>
 			{{#each series}}
-			{{log}}
 				<tr>
 					<td>{{.0}}</td>
 					<td>{{formatPct .1}}</td>
@@ -46,7 +55,7 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="results-chart col-xs-5">
+	<div class="results-chart col-xs-4">
 		<x-chart series={series} width={width} height={height}></x-chart>
 	</div>
 </div>

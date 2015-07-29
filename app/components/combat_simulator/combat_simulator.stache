@@ -1,9 +1,9 @@
 <div class="combat-simulator row">
 <div class="combat-simulator-config row">
-	<div class="squad1-table panel col-xs-6">
+	<div class="squad1-table x-panel col-xs-6">
 		<table class="table table-striped">
 			<caption>
-				Squad 1
+				{{squad1.id}}
 				<input type="button" class="btn btn-sm btn-primary" value="+" data-toggle="modal" data-target="#shipAddModal"></input>
 			</caption>
 			<thead>
@@ -32,10 +32,10 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="squad2-table panel col-xs-6">
+	<div class="squad2-table x-panel col-xs-6">
 		<table class="table table-striped">
 			<caption>
-				Squad 2
+				{{squad2.id}}
 				<input type="button" class="btn btn-sm btn-primary" value="+" data-toggle="modal" data-target="#shipAddModal"></input>
 			</caption>
 			<thead>
@@ -66,7 +66,7 @@
 	</div>
 </div>
 <div class="combat-simulator-combat-data row">
-	<div class="combat-data-table panel col-xs-8">
+	<div class="combat-data-table x-panel col-xs-8">
 		<table class="table table-striped">
 			<caption>Stats</caption>
 			<thead>
@@ -95,7 +95,7 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="combat-options panel form-horizontal col-xs-4">
+	<div class="combat-options x-panel form-horizontal col-xs-4">
 		 <div class="form-group">
 			<label class="col-xs-3 control-label" for="iterations">Iterations</label>
 			<div class="col-xs-9">

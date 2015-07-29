@@ -15,6 +15,12 @@ export default can.Component.extend({
 		attacker: new Ship(),
 		defender: new Ship(),
 
+		//Combat configuration
+		config: {
+			//Calculate evades instead of hits
+			invert: false
+		},
+
 		//Chart stuff
 		series: [],
 		width: 300,
@@ -35,11 +41,12 @@ export default can.Component.extend({
 	},
 	events: {
 		calculate: function() {
-			var series = Dice.combatSeries(this.viewModel.attacker, this.viewModel.defender);
+			var series = Dice.combatSeries(this.viewModel.attacker, this.viewModel.defender, this.viewModel.config);
 			this.viewModel.attr('series', series);
 		},
 
 		'{viewModel.attacker.current} change': 'calculate',
-		'{viewModel.defender.current} change': 'calculate'
+		'{viewModel.defender.current} change': 'calculate',
+		'{viewModel.config} change': 'calculate'
 	}
 });
