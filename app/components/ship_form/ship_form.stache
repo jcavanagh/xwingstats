@@ -1,0 +1,46 @@
+<div class="form-horizontal col-xs-6">
+	<div class="form-group">
+		<label class="col-xs-4 control-label" for="pilotSkill">Pilot Skill</label>
+		<div class="col-xs-8">
+			<input type="text" class="form-control" id="pilotSkill" placeholder="Pilot Skill" can-value="ship.current.pilotSkill">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-4 control-label" for="attack">Attack</label>
+		<div class="col-xs-8">
+			<input type="text" class="form-control" id="attack" placeholder="Attack" can-value="ship.current.attack">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-4 control-label" for="defense">Defense</label>
+		<div class="col-xs-8">
+			<input type="text" class="form-control" id="defense" placeholder="Defense" can-value="ship.current.defense">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-4 control-label" for="hull">Hull</label>
+		<div class="col-xs-8">
+			<input type="text" class="form-control" id="hull" placeholder="Hull" can-value="ship.current.hull">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-4 control-label" for="shield">Shield</label>
+		<div class="col-xs-8">
+			<input type="text" class="form-control" id="shield" placeholder="Shield" can-value="ship.current.shield">
+		</div>
+	</div>
+	<label class="checkbox col-xs-offset-3 col-xs-10">
+		<input type="checkbox" can-value="ship.current.focus">
+		Focus
+	</label>
+	<label class="checkbox col-xs-offset-3 col-xs-10">
+		<input type="checkbox" can-value="ship.current.evade">
+		Evade
+	</label>
+</div>
+<div class="form-horizontal col-xs-6">
+	<label class="checkbox col-xs-offset-3 col-xs-10">
+		<input type="checkbox" can-value="ship.current.upgrades.predator">
+		Predator
+	</label>
+</div>

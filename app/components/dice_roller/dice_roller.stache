@@ -5,8 +5,21 @@
 				<input type="checkbox" can-value="config.invert">
 				Invert
 			</label>
+			<label class="checkbox col-xs-offset-3 col-xs-10">
+				<input type="checkbox" can-value="attacker.current.focus">
+				Attacker Focus
+			</label>
+			<label class="checkbox col-xs-offset-3 col-xs-10">
+				<input type="checkbox" can-value="defender.current.focus">
+				Defender Focus
+			</label>
+			<label class="checkbox col-xs-offset-3 col-xs-10">
+				<input type="checkbox" can-value="defender.current.evade">
+				Defender Evade
+			</label>
 		</div>
 		<div class="row x-panel">
+			{{! This is almost a ship form, could probably be refactored - still kind of a snowflake, though }}
 			<div class="form-horizontal">
 				<div class="form-group">
 					<label class="col-xs-4 control-label" for="attack">Attack</label>
@@ -20,18 +33,6 @@
 						<input type="text" class="form-control" id="defense" placeholder="Defense" can-value="defender.current.defense">
 					</div>
 				</div>
-				<label class="checkbox col-xs-offset-3 col-xs-10">
-					<input type="checkbox" can-value="attacker.current.focus">
-					Attacker Focus
-				</label>
-				<label class="checkbox col-xs-offset-3 col-xs-10">
-					<input type="checkbox" can-value="defender.current.focus">
-					Defender Focus
-				</label>
-				<label class="checkbox col-xs-offset-3 col-xs-10">
-					<input type="checkbox" can-value="defender.current.evade">
-					Defender Evade
-				</label>
 			</div>
 		</div>
 	</div>
