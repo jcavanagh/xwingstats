@@ -74,7 +74,7 @@ export function combatSeries(attacker, defender, config) {
 
 	if(config && config.invert) {
 		fn = combatEvadeChance;
-		numDice = defender.current.defense +1;
+		numDice = defender.current.defense + 1 + getEvadeModifier(defender);
 	}
 
 	//Upper bound on hits/evades is number of attack/defense dice
