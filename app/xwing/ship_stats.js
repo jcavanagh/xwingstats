@@ -17,11 +17,13 @@ export default can.Map.extend({
 	define: {
 		//Pilot name
 		name: {
+			value: '',
 			type: 'string'
 		},
 
 		//Ship type
 		type: {
+			value: '',
 			type: 'string'
 		},
 

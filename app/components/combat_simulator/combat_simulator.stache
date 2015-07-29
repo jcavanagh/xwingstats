@@ -83,12 +83,12 @@
 				{{#combatData}}
 					{{#each .}}
 					<tr>
-						<td>{{squadId}}</td>
-						<td>{{@key}}</td>
-						<td>{{formatNum mean}}</td>
-						<td>{{formatNum median}}</td>
-						<td>{{formatNum stdDev}}</td>
-						<td>{{formatNum variance}}</td>
+						<td>{{data.squadId}}</td>
+						<td>{{title}}</td>
+						<td>{{formatNum data.mean}}</td>
+						<td>{{formatNum data.median}}</td>
+						<td>{{formatNum data.stdDev}}</td>
+						<td>{{formatNum data.variance}}</td>
 					</tr>
 					{{/each}}
 				{{/combatData}}

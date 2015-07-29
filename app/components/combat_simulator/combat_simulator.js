@@ -8,6 +8,29 @@ import Ship from 'app/xwing/ship';
 import Squad from 'app/xwing/squad';
 import * as Stats from 'app/math/stats';
 
+import * as Lifespan from './metrics/lifespan';
+import * as DamageOutput from './metrics/damage_output';
+import * as DamageInput from './metrics/damage_input';
+import * as Accuracy from './metrics/accuracy';
+
+var metrics = [{
+	title: 'Lifespan',
+	key: 'lifespan',
+	lib: Lifespan
+},{
+	title: 'Dmg Out',
+	key: 'dmg_out',
+	lib: DamageOutput
+},{
+	title: 'Dmg In',
+	key: 'dmg_in',
+	lib: DamageInput
+},{
+	title: 'Accuracy',
+	key: 'accuracy',
+	lib: Accuracy
+}];
+
 export default can.Component.extend({
 	tag: 'x-combat-simulator',
 	template: csTemplate,
@@ -83,54 +106,14 @@ export default can.Component.extend({
 		 */
 		calculateCombatData: function(squads, log) {
 			return _.map(squads, function(squad) {
-				return {
-					lifespan: {
-						squadId: squad.id,
-						mean: this.lifespanMean(squad, log),
-						median: this.lifespanMedian(squad, log),
-						variance: this.lifespanVariance(squad, log),
-						stdDev: this.lifespanStdDev(squad, log)
-					}
-				};
+				return _.reduce(metrics, function(combatData, metric) {
+					combatData[metric.key] = {
+						title: metric.title,
+						data: metric.lib.analyze(squad, log)
+					};
+					return combatData;
+				}, {});
 			}, this);
-		},
-
-		getSquadLifespans: function(squad, log) {
-			var lifespans = [];
-			var squadData = log.shipData[squad.id];
-
-			//2D array, one array per ship, array filled with lifespan for each iteration
-			var shipLifespans = _.transform(squadData, function(spans, ship) {
-				//Get average lifespan for each ship
-				spans.push(this.getShipLifespans(ship, log));
-			}, [], this);
-
-			//Zip by iteration, average each one
-			return _.map(_.zip.apply(this, shipLifespans), function(span) {
-				return Stats.mean(_.compact(span));
-			});
-		},
-
-		getShipLifespans: function(ship, log) {
-			return _.transform(ship, function(spans, shipIteration, index) {
-				spans.push(shipIteration.roundsSurvived);
-			}, []);
-		},
-
-		lifespanMean: function(squad, log) {
-			return Stats.mean(this.getSquadLifespans(squad, log));
-		},
-
-		lifespanMedian: function(squad, log) {
-			return Stats.median(this.getSquadLifespans(squad, log));
-		},
-
-		lifespanVariance: function(squad, log) {
-			return Stats.variance(this.getSquadLifespans(squad, log));
-		},
-
-		lifespanStdDev: function(squad, log) {
-			return Stats.stdDev(this.getSquadLifespans(squad, log));
 		},
 
 		//Button listeners

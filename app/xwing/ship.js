@@ -46,6 +46,6 @@ export default can.Construct.extend({
 	},
 
 	toString: function() {
-		return '[' + this.squad + ']' + this.current.name + '-' + this.current.type + '(' + this.current.attr('shield') + ', ' + this.current.attr('hull') + ')';
+		return '[' + this.squad.id + ']' + this.current.name + '-' + this.current.type + '(' + this.current.attr('shield') + ', ' + this.current.attr('hull') + ')';
 	}
 });

@@ -10,6 +10,10 @@ export function number(val, places) {
 	val = _.isFunction(val) ? val() : val;
 	places = places || 3;
 
+	if(val == null) {
+		return '';
+	}
+
 	//Make it a string
 	var strVal = '' + val.toFixed(places);
 
