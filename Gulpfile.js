@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var less = require('gulp-less');
 var concat = require('gulp-concat');
 var webserver = require('gulp-webserver');
+var eslint = require('gulp-eslint');
 
 gulp.task('webserver', function() {
   gulp.src(__dirname)
@@ -17,4 +18,11 @@ gulp.task('less', function () {
 		.pipe(less())
 		.pipe(concat('app.css'))
 		.pipe(gulp.dest('./css'));
+});
+
+gulp.task('lint', function() {
+	return gulp.src('./app/**/*.js')
+		.pipe(eslint())
+		.pipe(eslint.format())
+		.pipe(eslint.failOnError());
 });
