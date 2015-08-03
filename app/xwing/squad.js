@@ -1,4 +1,5 @@
 import can from 'can';
+import uniqueId from 'app/util/unique_id';
 
 /**
  * Models an X-Wing squad
@@ -6,10 +7,8 @@ import can from 'can';
  * @typedef {Object} Squad
  */
 export default can.Construct.extend({
-	//Auto-incrementing ID generator
-	currentId: 0,
 	getId: function() {
-		return 'squad_' + this.currentId++;
+		return uniqueId('squad');
 	}
 },{
 	init: function() {

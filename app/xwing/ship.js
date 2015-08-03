@@ -1,5 +1,6 @@
 import can from 'can';
 import ShipStats from './ship_stats';
+import uniqueId from 'app/util/unique_id';
 
 /**
  * Models an X-Wing ship
@@ -9,10 +10,8 @@ import ShipStats from './ship_stats';
  * @typedef {Object} Ship
  */
 export default can.Construct.extend({
-	//Auto-incrementing ID generator
-	currentId: 0,
 	getId: function() {
-		return 'ship_' + this.currentId++;
+		return uniqueId('ship');
 	}
 },{
 	init: function(shipData) {
