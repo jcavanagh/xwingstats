@@ -12,8 +12,13 @@ import * as Lifespan from './metrics/lifespan';
 import * as DamageOutput from './metrics/damage_output';
 import * as DamageInput from './metrics/damage_input';
 import * as Accuracy from './metrics/accuracy';
+import * as WinPct from './metrics/win_pct';
 
 var metrics = [{
+	title: 'Win %',
+	key: 'win_pct',
+	lib: WinPct
+},{
 	title: 'Lifespan',
 	key: 'lifespan',
 	lib: Lifespan
@@ -64,8 +69,11 @@ export default can.Component.extend({
 		}
 	},
 	helpers: {
-		formatNum: function(thing){
-			return Format.number(thing, 2);
+		formatPct: function(thing) {
+			return Format.percent(thing) || '-';
+		},
+		formatNum: function(thing) {
+			return Format.number(thing, 2) || '-';
 		},
 		stringifyLog: function() {
 			return this.attr('combatLog') ? this.attr('combatLog').toString() : 'No log available';

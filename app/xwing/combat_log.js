@@ -1,24 +1,18 @@
 import _ from 'lodash';
+import * as WriteDeep from 'app/util/write_deep';
 
 export default class CombatLog {
 	constructor() {
-		//Stores a text description of each round
-		this.combatLog = {};
-
-		//Total iterations
-		this.iterations = 0;
-		//Current iteration
-		this.iteration = 0;
-		//Current round
-		this.round = 0;
-
 		/**
 		 * Ship data
 		 *
-		 * shipData: {
+		 * combatData: {
 		 * 	0: {
+		 * 	  "squad": {
+		 * 	    //All data for the squad in general
+		 * 	  },
 		 * 	  "ship_0": {
-		 * 	    //All data
+		 * 	    //All data for a ship
 		 * 	  }
 		 * 	}
 		 * }
@@ -28,45 +22,43 @@ export default class CombatLog {
 		 * @property damageDealt
 		 * @property damageReceived
 		 */
-		this.shipData = {};
+		this.combatData = {};
+
+		//Stores a text description of each round
+		this.combatText = {};
+
+		//Total iterations
+		this.iterations = 0;
+		//Current iteration
+		this.iteration = 0;
+		//Current round
+		this.round = 0;
 	}
 
 	/**
 	 * Adds a combat data point to this iteration for the ship
 	 * Sums, does not replace
 	 *
-	 * @param {Ship}   ship  The ship to log data for
-	 * @param {String} prop  The property to modify
-	 * @param {Number} value The value to add to the property
+	 * @param {Squad}  squad  The squad to log data for
+	 * @param {Ship}   [ship] The ship to log data for
+	 * @param {String} prop   The property to modify
+	 * @param {Number} value  The value to add to the property
 	 */
-	addCombatData(ship, prop, value) {
-		var iterationPtr, shipPtr, squadPtr;
-
-		//Build structure if we don't have it
-		if(!this.shipData[ship.squad.id]) {
-			this.shipData[ship.squad.id] = {};
+	addCombatData(squad, ship, prop, value) {
+		if(ship) {
+			WriteDeep.addDeep(this.combatData, value, [squad.id, ship.id, this.iteration, prop]);
+		} else {
+			WriteDeep.addDeep(this.combatData, value, [squad.id, 'squad', this.iteration, prop]);
 		}
-		squadPtr = this.shipData[ship.squad.id];
+	}
 
-		if(!squadPtr[ship.id]) {
-			squadPtr[ship.id] = {
-				//If we need a ship ref, data processing needs to special case this key
-				// _ship: ship
-			};
-		}
-		shipPtr = squadPtr[ship.id];
+	getSquadData(squad) {
+		return this.combatData[squad.id]['squad'];
+	}
 
-		if(!shipPtr[this.iteration]) {
-			shipPtr[this.iteration] = {};
-		}
-		iterationPtr = shipPtr[this.iteration];
-
-		if(iterationPtr[prop] == null) {
-			iterationPtr[prop] = 0;
-		}
-
-		//Save the prop
-		iterationPtr[prop] += value;
+	getSquadShipData(squad) {
+		//Strip the squad data container, leave only the ship containers
+		return _.omit(this.combatData[squad.id], 'squad');
 	}
 
 	/**
@@ -79,7 +71,7 @@ export default class CombatLog {
 	 */
 	log(attacker, defender, hits) {
 		var hitStr = (hits === 1) ? 'hit' : 'hits';
-		this.write(this.iteration, this.round, attacker.toString(), 'scores', hits, hitStr + ' against', defender.toString());
+		this.writeText(this.iteration, this.round, attacker.toString(), 'scores', hits, hitStr + ' against', defender.toString());
 	}
 
 	/**
@@ -89,7 +81,7 @@ export default class CombatLog {
 	 * @param {Number} round     The current combat round within an iteration
 	 * @param {String} args      Variable number of strings to concat, space separated
 	 */
-	write() {
+	writeText() {
 		//Peel off static args
 		var args = Array.prototype.slice.call(arguments);
 		var iteration = args.shift();
@@ -105,15 +97,8 @@ export default class CombatLog {
 			return str;
 		}, '');
 
-		if(!this.combatLog[iteration]) {
-			this.combatLog[iteration] = [];
-		}
-
-		if(!this.combatLog[iteration][round]) {
-			this.combatLog[iteration][round] = [];
-		}
-
-		this.combatLog[iteration][round].push(logStr);
+		var scope = WriteDeep.buildHierarchy(this.combatText, [iteration, round], []);
+		scope.push(logStr);
 	}
 
 	/**
@@ -140,12 +125,12 @@ export default class CombatLog {
 		}
 
 		if(iteration == null) {
-			return _.reduce(this.combatLog, function(str, val, key) {
+			return _.reduce(this.combatText, function(str, val, key) {
 				var iterStr = stringifyIteration(val);
 				return str + '***ITERATION ' + key + '***\n' + iterStr + '\n\n';
 			}, '', this);
 		} else {
-			return stringifyIteration(this.combatLog[iteration]);
+			return stringifyIteration(this.combatText[iteration]);
 		}
 	}
 }

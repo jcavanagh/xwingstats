@@ -43,6 +43,14 @@ export function simulate(squads, options) {
 			}
 		}
 
+		//Log which squad won
+		var winner = winningSquad(squads);
+		var losers = losingSquads(squads);
+		log.addCombatData(winner, null, 'win', 1);
+		_.each(losers, function(loser) {
+			log.addCombatData(loser, null, 'loss', 1);
+		});
+
 		//Reset all the things
 		resetCombat(squads);
 	});
@@ -129,9 +137,9 @@ function round(squads, log) {
 
 		//Log it first, so ships show current state in output, instead of post-attack state
 		log.log(attacker, defender, hits);
-		log.addCombatData(attacker, 'attacksMade', attacker.current.attack);
-		log.addCombatData(attacker, 'damageDealt', hits);
-		log.addCombatData(defender, 'damageReceived', hits);
+		log.addCombatData(attacker.squad, attacker, 'attacksMade', attacker.current.attack);
+		log.addCombatData(attacker.squad, attacker, 'damageDealt', hits);
+		log.addCombatData(defender.squad, defender, 'damageReceived', hits);
 
 		//Get wrecked
 		defender.applyDamage(hits);
@@ -139,7 +147,20 @@ function round(squads, log) {
 
 	//Mark ships that survived this round
 	_.each(allRemainingShips(squads), function(ship) {
-		log.addCombatData(ship, 'roundsSurvived', 1);
+		log.addCombatData(ship.squad, ship, 'roundsSurvived', 1);
+	});
+}
+
+//Post combat analysis
+function winningSquad(squads) {
+	return _.find(squads, function(squad) {
+		return remainingShips(squad).length > 0;
+	});
+}
+
+function losingSquads(squads) {
+	return _.filter(squads, function(squad) {
+		return remainingShips(squad).length === 0;
 	});
 }
 

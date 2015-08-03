@@ -73,6 +73,7 @@
 				<tr>
 					<td>Squad ID</td>
 					<td>Metric</td>
+					<td>Value</td>
 					<td>Mean</td>
 					<td>Median</td>
 					<td>Std. Dev.</td>
@@ -85,6 +86,7 @@
 					<tr>
 						<td>{{data.squadId}}</td>
 						<td>{{title}}</td>
+						<td>{{formatNum data.value}}</td>
 						<td>{{formatNum data.mean}}</td>
 						<td>{{formatNum data.median}}</td>
 						<td>{{formatNum data.stdDev}}</td>

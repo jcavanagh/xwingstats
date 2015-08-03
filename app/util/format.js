@@ -2,7 +2,8 @@ export function percent(val, places) {
 	//It could be a compute
 	val = _.isFunction(val) ? val() : val;
 
-	return number(val * 100) + '%';
+	//Return empty string if we have no value
+	return (val == null) ? '' : number(val * 100) + '%';
 }
 
 export function number(val, places) {
@@ -10,6 +11,7 @@ export function number(val, places) {
 	val = _.isFunction(val) ? val() : val;
 	places = places || 3;
 
+	//Return empty string if we have no value
 	if(val == null) {
 		return '';
 	}
