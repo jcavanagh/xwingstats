@@ -42,7 +42,7 @@ export function addDeep(obj, val, props) {
  *
  * @param  {Object}  obj          Object to dive into
  * @param  {Array}   props        Properties to create, in order
- * @param  {Object}  initialValue Initial value to set.  If an object, returns that scope.  Otherwise, returns containing scope.
+ * @param  {Object}  initialValue Initial value to set, if one does not exist.  If an object, returns that scope.  Otherwise, returns containing scope.
  * @return {[Object}              Scope at lowest depth
  */
 export function buildHierarchy(obj, props, initialValue) {
@@ -64,7 +64,7 @@ export function buildHierarchy(obj, props, initialValue) {
 			return scope[prop];
 		} else if(initialValue) {
 			//Insert the initial value if we have one
-			scope[prop] = initialValue;
+			scope[prop] = scope[prop] || initialValue;
 
 			//If our initial value is an object, return that as the new scope
 			//Otherwise, return the containing scope

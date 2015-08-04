@@ -64,40 +64,31 @@ export default class CombatLog {
 	/**
 	 * Logs a combat round
 	 *
-	 * @param  {Number} iteration  The current combat iteration
-	 * @param  {Number} round      The current combat round within an iteration
 	 * @param  {Array}  attackers  Attacking ships
 	 * @param  {Array}  defenders  Defending ships
 	 */
 	log(attacker, defender, hits) {
 		var hitStr = (hits === 1) ? 'hit' : 'hits';
-		this.writeText(this.iteration, this.round, attacker.toString(), 'scores', hits, hitStr + ' against', defender.toString());
+		this.writeText(attacker.toString(), 'scores', hits, hitStr + ' against', defender.toString());
 	}
 
 	/**
 	 * Writes a string representation of a round
 	 *
-	 * @param {Number} iteration The current combat iteration
-	 * @param {Number} round     The current combat round within an iteration
-	 * @param {String} args      Variable number of strings to concat, space separated
+	 * @param {String} args Variable number of strings to concat, space separated
 	 */
 	writeText() {
-		//Peel off static args
-		var args = Array.prototype.slice.call(arguments);
-		var iteration = args.shift();
-		var round = args.shift();
-
-		if(iteration == null) {
+		if(this.iteration == null) {
 			return;
 		}
 
 		//Stringify args, inserting spaces
-		var logStr = _.reduce(args, function(str, arg) {
+		var logStr = _.reduce(arguments, function(str, arg) {
 			str += arg + ' ';
 			return str;
 		}, '');
 
-		var scope = WriteDeep.buildHierarchy(this.combatText, [iteration, round], []);
+		var scope = WriteDeep.buildHierarchy(this.combatText, [this.iteration, this.round], []);
 		scope.push(logStr);
 	}
 
@@ -113,7 +104,7 @@ export default class CombatLog {
 			return _.reduce(iter, function(iterStr, round, roundIndex) {
 				return iterStr + _.reduce(round, function(roundStr, logItem, roundItemIndex) {
 					//Generate the round prefix if it's the first item being processed this round
-					var prefix = (roundIndex + 1) + ': ';
+					var prefix = (parseInt(roundIndex, 10) + 1) + ': ';
 					if(roundItemIndex !== 0) {
 						//If it's not the first round, just pad the indent to match
 						prefix = _.pad('', prefix.length);
