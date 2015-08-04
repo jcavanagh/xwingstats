@@ -43,6 +43,10 @@ export default can.Component.extend({
 		calculate: function() {
 			var series = Dice.combatSeries(this.viewModel.attacker, this.viewModel.defender, this.viewModel.config);
 			this.viewModel.attr('series', series);
-		}
+		},
+
+		'{viewModel.attacker.current} change': 'calculate',
+		'{viewModel.defender.current} change': 'calculate',
+		'{viewModel.config} change': 'calculate'
 	}
 });
