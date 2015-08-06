@@ -15,9 +15,9 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-xs-4 control-label" for="defense">Defense</label>
+					<label class="col-xs-4 control-label" for="agility">Agility</label>
 					<div class="col-xs-8">
-						<input type="text" class="form-control" id="defense" placeholder="Defense" can-value="defender.current.defense">
+						<input type="text" class="form-control" id="agility" placeholder="Agility" can-value="defender.current.agility">
 					</div>
 				</div>
 				<label class="checkbox col-xs-offset-3 col-xs-10">

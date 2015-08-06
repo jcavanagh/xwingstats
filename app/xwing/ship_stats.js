@@ -4,7 +4,7 @@
  * @param {String}  name        Pilot name
  * @param {String}  type        Ship type
  * @param {Number}  attack      Number of attack dice
- * @param {Number}  defense     Number of defense dice
+ * @param {Number}  agility     Number of defense dice
  * @param {Number}  hull        Number of hull points
  * @param {Number}  shield      Number of shield points
  *
@@ -21,10 +21,23 @@ export default can.Map.extend({
 			type: 'string'
 		},
 
+		faction: {
+			type: 'string'
+		},
+
 		//Ship type
 		type: {
 			value: '',
 			type: 'string'
+		},
+
+		//Ship features
+		maneuvers: {
+			type: 'array'
+		},
+
+		upgrades: {
+			type: 'array'
 		},
 
 		//Squad assignment
@@ -44,7 +57,7 @@ export default can.Map.extend({
 		attack: {
 			type: 'number'
 		},
-		defense: {
+		agility: {
 			type: 'number'
 		},
 		hull: {

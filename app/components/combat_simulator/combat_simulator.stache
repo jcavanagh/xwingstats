@@ -10,7 +10,7 @@
 				<tr>
 					<td>Ship ID</td>
 					<td>Attack</td>
-					<td>Defense</td>
+					<td>Agility</td>
 					<td>Hull</td>
 					<td>Shield</td>
 					<td>{{! Delete button }}</td>
@@ -21,7 +21,7 @@
 				<tr>
 					<td>{{id}}</td>
 					<td>{{base.attack}}</td>
-					<td>{{base.defense}}</td>
+					<td>{{base.agility}}</td>
 					<td>{{base.hull}}</td>
 					<td>{{base.shield}}</td>
 					<td>
@@ -42,7 +42,7 @@
 				<tr>
 					<td>Ship ID</td>
 					<td>Attack</td>
-					<td>Defense</td>
+					<td>Agility</td>
 					<td>Hull</td>
 					<td>Shield</td>
 					<td>{{! Delete button }}</td>
@@ -53,7 +53,7 @@
 				<tr>
 					<td>{{id}}</td>
 					<td>{{base.attack}}</td>
-					<td>{{base.defense}}</td>
+					<td>{{base.agility}}</td>
 					<td>{{base.hull}}</td>
 					<td>{{base.shield}}</td>
 					<td>
@@ -68,7 +68,7 @@
 <div class="combat-simulator-combat-data row">
 	<div class="combat-data-table x-panel col-xs-8">
 		<table class="table table-striped">
-			<caption>Stats</caption>
+			<caption>Stats (ship average, per iteration)</caption>
 			<thead>
 				<tr>
 					<td>Squad ID</td>
@@ -156,8 +156,8 @@
 			<input type="text" class="form-control" id="ship-add-attack" can-value="modal.ship.attack">
 		</div>
 		<div class="form-group">
-			<label for="ship-add-defense" class="control-label">Agility</label>
-			<input type="text" class="form-control" id="ship-add-defense" can-value="modal.ship.defense">
+			<label for="ship-add-agility" class="control-label">Agility</label>
+			<input type="text" class="form-control" id="ship-add-agility" can-value="modal.ship.agility">
 		</div>
 		<div class="form-group">
 			<label for="ship-add-shield" class="control-label">Shield</label>

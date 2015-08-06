@@ -55,7 +55,7 @@ export default can.Component.extend({
 			ship: {
 				pilotSkill: 9,
 				attack: 4,
-				defense: 3,
+				agility: 3,
 				shield: 2,
 				hull: 3
 			},
@@ -99,7 +99,7 @@ export default can.Component.extend({
 			this.viewModel.modal.attr('ship', {
 				pilotSkill: 9,
 				attack: 4,
-				defense: 3,
+				agility: 3,
 				shield: 2,
 				hull: 3,
 				squad: squad

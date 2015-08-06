@@ -74,7 +74,7 @@ export function combatSeries(attacker, defender, config) {
 
 	if(config && config.invert) {
 		fn = combatEvadeChance;
-		numDice = defender.current.defense + 1 + getEvadeModifier(defender);
+		numDice = defender.current.agility + 1 + getEvadeModifier(defender);
 	}
 
 	//Upper bound on hits/evades is number of attack/defense dice
@@ -164,7 +164,7 @@ function getHitSeries(ship, config) {
 
 function getEvadeSeries(ship, config) {
 	var modifiedEvadeChance = getModifiedEvadeChance(ship);
-	var def = ship.current.defense;
+	var def = ship.current.agility;
 
 	return _.times(def + 1, function(index) {
 		return Stats.binomialExperiment(def, index, modifiedEvadeChance, 1 - modifiedEvadeChance);
