@@ -44,7 +44,7 @@ export default [{
 	id: 'lit_reflexes',
 	name: 'Lightning Reflexes',
 	points: 1,
-	text: 'After you execute a white maneouvre on your dial, you may discard this card to rotate your ship 180°. Then receive 1 stress token after the “Check Pilot Stress” step.',
+	text: 'After you execute a green or white maneuver on your dial, you may discard this card to rotate your ship 180°. Then receive 1 stress token after the “Check Pilot Stress” step.',
 	restrictions: {
 		ship: {
 			size: 'small'

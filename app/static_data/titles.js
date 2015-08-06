@@ -70,7 +70,7 @@ export default [{
 	id: 'tie_x1',
 	name: 'TIE/x1',
 	points: 0,
-	text: 'Your upgrade bar gains the [sys_upgrade] upgrade icon. If you equip a [sys_upgrade] upgrade, its squad point cost is reduced by 4 (to a minimum of 0).',
+	text: 'Your upgrade bar gains the [system] upgrade icon. If you equip a [system] upgrade, its squad point cost is reduced by 4 (to a minimum of 0).',
 	restrictions: {
 		ship: {
 			id: 'tie-a'
@@ -81,7 +81,7 @@ export default [{
 	id: 'virago',
 	name: 'Virago',
 	points: 1,
-	text: 'Your upgrade bar gains the [sys_upgrade] and [illicit] upgrade icons. You cannot equip this card if your pilot skill is "3" or lower.',
+	text: 'Your upgrade bar gains the [system] and [illicit] upgrade icons. You cannot equip this card if your pilot skill is "3" or lower.',
 	unique: true,
 	restrictions: {
 		ship: {

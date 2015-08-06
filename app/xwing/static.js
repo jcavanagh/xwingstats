@@ -13,7 +13,7 @@ import modifications from 'app/static_data/modifications';
 import pilots from 'app/static_data/pilots';
 import salvagedAstromechs from 'app/static_data/salvaged_astromechs';
 import ships from 'app/static_data/ships';
-import sysUpgrades from 'app/static_data/sys_upgrades';
+import system from 'app/static_data/system';
 import titles from 'app/static_data/titles';
 import torpedoes from 'app/static_data/torpedoes';
 import turrets from 'app/static_data/turrets';
@@ -90,7 +90,7 @@ export default class Static {
 	}
 
 	getSystemUpgrades() {
-		return sysUpgrades;
+		return system;
 	}
 
 	getTitles() {

@@ -66,14 +66,14 @@ export default [{
 	factionId: 'rebel',
 	pilotSkill: 2,
 	points: 22,
-	upgrades: [ 'torpedo', 'torpedo', 'mod', 'sys_upgrade', 'cannon' ]
+	upgrades: [ 'torpedo', 'torpedo', 'mod', 'system', 'cannon' ]
 },{
 	name: 'Dagger Squadron Pilot',
 	shipId: 'bwing',
 	factionId: 'rebel',
 	pilotSkill: 4,
 	points: 24,
-	upgrades: [ 'torpedo', 'torpedo', 'mod', 'sys_upgrade', 'cannon' ]
+	upgrades: [ 'torpedo', 'torpedo', 'mod', 'system', 'cannon' ]
 },{
 	name: 'Nera Dantels',
 	shipId: 'bwing',
@@ -81,7 +81,7 @@ export default [{
 	pilotSkill: 5,
 	points: 26,
 	unique: true,
-	upgrades: [ 'torpedo', 'torpedo', 'mod', 'sys_upgrade', 'cannon', 'ept' ],
+	upgrades: [ 'torpedo', 'torpedo', 'mod', 'system', 'cannon', 'ept' ],
 	ability: {
 		id: 'nera_dantels',
 		text: 'You can perform torpedo secondary weapon attacks at ships outside your firing arc.'
@@ -93,7 +93,7 @@ export default [{
 	pilotSkill: 6,
 	points: 22,
 	unique: true,
-	upgrades: [ 'torpedo', 'torpedo', 'mod', 'sys_upgrade', 'cannon', 'ept' ],
+	upgrades: [ 'torpedo', 'torpedo', 'mod', 'system', 'cannon', 'ept' ],
 	ability: {
 		id: 'ibtisam',
 		text: 'When attacking or defending, if you have at least one stress token, you may reroll 1 of your dice.'
@@ -105,7 +105,7 @@ export default [{
 	pilotSkill: 7,
 	points: 29,
 	unique: true,
-	upgrades: [ 'torpedo', 'torpedo', 'mod', 'sys_upgrade', 'cannon', 'ept' ],
+	upgrades: [ 'torpedo', 'torpedo', 'mod', 'system', 'cannon', 'ept' ],
 	ability: {
 		id: 'keyan_farlander',
 		text: 'When attacking, you may remove 1 stress token to change all of your [focus] results to [hit] results.'
@@ -117,7 +117,7 @@ export default [{
 	pilotSkill: 8,
 	points: 31,
 	unique: true,
-	upgrades: [ 'torpedo', 'torpedo', 'mod', 'sys_upgrade', 'cannon' ],
+	upgrades: [ 'torpedo', 'torpedo', 'mod', 'system', 'cannon' ],
 	ability: {
 		id: 'ten_numb',
 		text: 'When attacking, 1 of your [crit] results cannot be cancelled by defense dice.'
@@ -128,14 +128,14 @@ export default [{
 	factionId: 'rebel',
 	pilotSkill: 1,
 	points: 27,
-	upgrades: [ 'astromech', 'torpedo', 'mod', 'sys_upgrade' ]
+	upgrades: [ 'astromech', 'torpedo', 'mod', 'system' ]
 },{
 	name: 'Blackmoon Squadron Pilot',
 	shipId: 'ewing',
 	factionId: 'rebel',
 	pilotSkill: 3,
 	points: 29,
-	upgrades: [ 'astromech', 'torpedo', 'mod', 'sys_upgrade' ]
+	upgrades: [ 'astromech', 'torpedo', 'mod', 'system' ]
 },{
 	name: 'Etahn A\'baht',
 	shipId: 'ewing',
@@ -143,7 +143,7 @@ export default [{
 	pilotSkill: 5,
 	points: 32,
 	unique: true,
-	upgrades: [ 'astromech', 'torpedo', 'mod', 'sys_upgrade', 'ept' ],
+	upgrades: [ 'astromech', 'torpedo', 'mod', 'system', 'ept' ],
 	ability: {
 		id: 'etahn_abaht',
 		text: 'When an enemy ship inside your firing arc at Range 1-3 is defending, the attacker may change 1 of its [hit] results to a [crit] result.'
@@ -155,7 +155,7 @@ export default [{
 	pilotSkill: 8,
 	points: 35,
 	unique: true,
-	upgrades: [ 'astromech', 'torpedo', 'mod', 'sys_upgrade' ],
+	upgrades: [ 'astromech', 'torpedo', 'mod', 'system' ],
 	ability: {
 		id: 'corran_horn',
 		text: 'At the start of the End phase, you may perform 1 attack. You may not attack next round.'
@@ -906,14 +906,14 @@ export default [{
 	factionId: 'imperial',
 	pilotSkill: 3,
 	points: 25,
-	upgrades: [ 'sys_upgrade', 'mod', 'crew' ]
+	upgrades: [ 'system', 'mod', 'crew' ]
 },{
 	name: 'Shadow Squadron Pilot',
 	shipId: 'tieph',
 	factionId: 'imperial',
 	pilotSkill: 5,
 	points: 27,
-	upgrades: [ 'sys_upgrade', 'mod', 'crew' ]
+	upgrades: [ 'system', 'mod', 'crew' ]
 },{
 	name: '"Echo"',
 	shipId: 'tieph',
@@ -921,7 +921,7 @@ export default [{
 	pilotSkill: 6,
 	points: 30,
 	unique: true,
-	upgrades: [ 'sys_upgrade', 'mod', 'crew', 'ept' ],
+	upgrades: [ 'system', 'mod', 'crew', 'ept' ],
 	ability: {
 		id: 'echo',
 		text: 'When you decloak, you must use the [2 bank left] or [2 bank right] template instead of the [2 straight] template.'
@@ -933,7 +933,7 @@ export default [{
 	pilotSkill: 7,
 	points: 32,
 	unique: true,
-	upgrades: [ 'sys_upgrade', 'mod', 'crew', 'ept' ],
+	upgrades: [ 'system', 'mod', 'crew', 'ept' ],
 	ability: {
 		id: 'whisper',
 		text: 'After you perform an attack that hits, you may assign 1 focus token to your ship.'
@@ -945,7 +945,7 @@ export default [{
 	pilotSkill: 6,
 	points: 21,
 	unreleased: true,
-	upgrades: [ 'sys_upgrade', 'torpedo', 'torpedo', 'missile', 'missile', 'bomb', 'bomb', 'title', 'mod' ]
+	upgrades: [ 'system', 'torpedo', 'torpedo', 'missile', 'missile', 'bomb', 'bomb', 'title', 'mod' ]
 },{
 	name: '"Deathrain"',
 	shipId: 'tiepu',
@@ -954,7 +954,7 @@ export default [{
 	points: 26,
 	unique: true,
 	unreleased: true,
-	upgrades: [ 'sys_upgrade', 'torpedo', 'torpedo', 'missile', 'missile', 'bomb', 'bomb', 'title', 'mod' ],
+	upgrades: [ 'system', 'torpedo', 'torpedo', 'missile', 'missile', 'bomb', 'bomb', 'title', 'mod' ],
 	ability: {
 		id: 'deathrain',
 		text: 'When dropping a bomb, you may use the front guides of your ship. After dropping a bomb you may perform a free barrel roll action.'
@@ -967,7 +967,7 @@ export default [{
 	points: 27,
 	unique: true,
 	unreleased: true,
-	upgrades: [ 'sys_upgrade', 'torpedo', 'torpedo', 'missile', 'missile', 'bomb', 'bomb', 'title', 'mod' ],
+	upgrades: [ 'system', 'torpedo', 'torpedo', 'missile', 'missile', 'bomb', 'bomb', 'title', 'mod' ],
 	ability: {
 		id: 'redline',
 		text: 'You may maintain 2 target locks on the same ship. When you acquire a target lock, you may acquire a second lock on that ship.'
@@ -1034,7 +1034,7 @@ export default [{
 	factionId: 'imperial',
 	pilotSkill: 2,
 	points: 21,
-	upgrades: [ 'sys_upgrade', 'cannon', 'crew', 'crew', 'title', 'mod' ]
+	upgrades: [ 'system', 'cannon', 'crew', 'crew', 'title', 'mod' ]
 },{
 	name: 'Captain Yorr',
 	shipId: 'bus',
@@ -1042,7 +1042,7 @@ export default [{
 	pilotSkill: 4,
 	points: 24,
 	unique: true,
-	upgrades: [ 'sys_upgrade', 'cannon', 'crew', 'crew', 'title', 'mod' ],
+	upgrades: [ 'system', 'cannon', 'crew', 'crew', 'title', 'mod' ],
 	ability: {
 		id: 'cpt_yorr',
 		text: 'When another friendly ship at Range 1-2 would receive a stress token, if you have 2 or fewer stress tokens, you may receive that token instead.'
@@ -1054,7 +1054,7 @@ export default [{
 	pilotSkill: 6,
 	points: 26,
 	unique: true,
-	upgrades: [ 'sys_upgrade', 'cannon', 'crew', 'crew', 'title', 'mod' ],
+	upgrades: [ 'system', 'cannon', 'crew', 'crew', 'title', 'mod' ],
 	ability: {
 		id: 'col_jendon',
 		text: 'At the start of the Combat Phase, you may assign 1 of your blue target lock tokens to a friendly ship at Range 1 if it does not have a blue target lock token.'
@@ -1066,7 +1066,7 @@ export default [{
 	pilotSkill: 8,
 	points: 27,
 	unique: true,
-	upgrades: [ 'sys_upgrade', 'cannon', 'crew', 'crew', 'title', 'mod' ],
+	upgrades: [ 'system', 'cannon', 'crew', 'crew', 'title', 'mod' ],
 	ability: {
 		id: 'cpt_kagi',
 		text: 'When an enemy ship acquires a target lock, it must lock onto your ship if able.'
@@ -1397,7 +1397,7 @@ export default [{
 	pilotSkill: 6,
 	points: 36,
 	unique: true,
-	upgrades: [ 'sys_upgrade', 'cannon', 'cannon', 'bomb', 'illicit', 'title', 'mod', 'ept' ],
+	upgrades: [ 'system', 'cannon', 'cannon', 'bomb', 'illicit', 'title', 'mod', 'ept' ],
 	ability: {
 		id: 'ig88a',
 		text: 'After you perform an attack that destroys the defender, you may recover 1 shield.'
@@ -1409,7 +1409,7 @@ export default [{
 	pilotSkill: 6,
 	points: 36,
 	unique: true,
-	upgrades: [ 'sys_upgrade', 'cannon', 'cannon', 'bomb', 'illicit', 'title', 'mod', 'ept' ],
+	upgrades: [ 'system', 'cannon', 'cannon', 'bomb', 'illicit', 'title', 'mod', 'ept' ],
 	ability: {
 		id: 'ig88b',
 		text: 'Once per round, after you perform an attack that does not hit, you may perform an attack with an equipped [cannon] secondary weapon.'
@@ -1421,7 +1421,7 @@ export default [{
 	pilotSkill: 6,
 	points: 36,
 	unique: true,
-	upgrades: [ 'sys_upgrade', 'cannon', 'cannon', 'bomb', 'illicit', 'title', 'mod', 'ept' ],
+	upgrades: [ 'system', 'cannon', 'cannon', 'bomb', 'illicit', 'title', 'mod', 'ept' ],
 	ability: {
 		id: 'ig88c',
 		text: 'After you perform a boost action, you may perform a free evade action.'
@@ -1433,7 +1433,7 @@ export default [{
 	pilotSkill: 6,
 	points: 36,
 	unique: true,
-	upgrades: [ 'sys_upgrade', 'cannon', 'cannon', 'bomb', 'illicit', 'title', 'mod', 'ept' ],
+	upgrades: [ 'system', 'cannon', 'cannon', 'bomb', 'illicit', 'title', 'mod', 'ept' ],
 	ability: {
 		id: 'ig88d',
 		text: 'You may execute the [s-loop left] or [s-loop right] manoeuvre using the corresponding [3 hard left] or [3 hard right] template.'
