@@ -2,7 +2,7 @@ export default [{
 	id: 'r2',
 	name: 'R2 Astromech',
 	points: 1,
-	text: 'Treat all 1- and 2-speed manoeuvres as green manoeuvres.',
+	text: 'Treat all 1- and 2-speed maneuvers as green maneuvers.',
 	restrictions: {},
 	sets: [ 'yw' ]
 },{
@@ -87,7 +87,7 @@ export default [{
 	id: 'r2d2',
 	name: 'R2-D2',
 	points: 4,
-	text: 'After executing a green manoeuvre, you may recover one shield (up to your shield value).',
+	text: 'After executing a green maneuver, you may recover one shield (up to your shield value).',
 	unique: true,
 	restrictions: {},
 	sets: [ 'core' ]

@@ -4,7 +4,7 @@ import csTemplate from './combat_simulator.stache!';
 import * as Combat from 'app/xwing/combat';
 import * as Dice from 'app/xwing/dice';
 import * as Format from 'app/util/format';
-import Ship from 'app/xwing/ship';
+import Pilot from 'app/xwing/pilot';
 import Squad from 'app/xwing/squad';
 import * as Stats from 'app/math/stats';
 
@@ -53,19 +53,19 @@ export default can.Component.extend({
 		//Stores data for the ship add modal
 		modal: {
 			ship: {
-				pilotSkill: 9,
+				skill: 9,
 				attack: 4,
 				agility: 3,
 				shield: 2,
 				hull: 3
 			},
 
-			//One of the above Squad objects to add the new Ship to
+			//One of the above Squad objects to add the new Pilot to
 			squad: null
 		},
 
-		removeShip: function(squad, ship) {
-			squad.removeShip(ship);
+		removePilot: function(squad, ship) {
+			squad.removePilot(ship);
 		}
 	},
 	helpers: {
@@ -90,14 +90,14 @@ export default can.Component.extend({
 			this.viewModel.attr('combatData', combatData);
 		},
 
-		addShip: function() {
+		addPilot: function() {
 			var squad = this.viewModel.modal.attr('squad');
-			var ship = new Ship(this.viewModel.modal.ship);
-			squad.addShip(ship);
+			var ship = new Pilot(this.viewModel.modal.ship);
+			squad.addPilot(ship);
 
 			//Clear modal data
 			this.viewModel.modal.attr('ship', {
-				pilotSkill: 9,
+				skill: 9,
 				attack: 4,
 				agility: 3,
 				shield: 2,
@@ -126,7 +126,7 @@ export default can.Component.extend({
 
 		//Button listeners
 		'.combat-options input[type=submit] click': 'simulate',
-		'#shipAddModal input[type=submit] click': 'addShip',
+		'#shipAddModal input[type=submit] click': 'addPilot',
 
 		//Squad add button handlers
 		'.squad1-table input[type=button] click': function() {

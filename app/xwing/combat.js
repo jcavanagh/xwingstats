@@ -50,9 +50,6 @@ export function simulate(squads, options) {
 		_.each(losers, function(loser) {
 			log.addCombatData(loser, null, 'loss', 1);
 		});
-
-		//Reset all the things
-		resetCombat(squads);
 	});
 
 	return log;
@@ -113,7 +110,7 @@ function remainingSquads(squads) {
  */
 function round(squads, log) {
 	var fireMode = log.fireMode;
-	var combatOrder = _.sortBy(allShips(squads), 'pilotSkill');
+	var combatOrder = _.sortBy(allShips(squads), 'skill');
 
 	_.each(combatOrder, function(attacker) {
 		//Double-check the combat order and ignore ships that are dead
@@ -137,7 +134,7 @@ function round(squads, log) {
 
 		//Log it first, so ships show current state in output, instead of post-attack state
 		log.log(attacker, defender, hits);
-		log.addCombatData(attacker.squad, attacker, 'attacksMade', attacker.current.attack);
+		log.addCombatData(attacker.squad, attacker, 'attacksMade', attacker.attack);
 		log.addCombatData(attacker.squad, attacker, 'damageDealt', hits);
 		log.addCombatData(defender.squad, defender, 'damageReceived', hits);
 
@@ -172,28 +169,19 @@ function fireRandom(attacker, defenders, log) {
 function fireWeakest(attacker, defenders, log) {
 	return _.min(defenders, function(defender) {
 		//TODO: This is probably too simplistic
-		return defender.current.shield + defender.current.hull;
+		return defender.shield + defender.hull;
 	});
 }
 
 function fireStrongest(attacker, defenders, log) {
 	return _.max(defenders, function(defender) {
 		//TODO: This is probably too simplistic
-		return defender.current.attack;
+		return defender.attack;
 	});
 }
 
 function fireMaximizeHit(attacker, defenders, log) {
 	return _.max(defenders, function(defender) {
 		return Dice.averageCombatSeries(attacker, defender);
-	});
-}
-
-//TODO: Clone collections instead of manipulating directly?
-function resetCombat(squads) {
-	_.each(squads, function(squad) {
-		_.each(squad.ships, function(ship) {
-			ship.reset();
-		});
 	});
 }

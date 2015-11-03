@@ -6,26 +6,23 @@ import uniqueId from 'app/util/unique_id';
  *
  * @typedef {Object} Squad
  */
-export default can.Construct.extend({
-	getId: function() {
-		return uniqueId('squad');
-	}
-},{
-	init: function() {
-		this.id = this.constructor.getId();
-		this.ships = new can.List();
+export default can.Map.extend({
+	define: {
+		id: {
+			value: uniqueId('squad')
+		}
 	},
 
-	addShip: function(ship) {
+	addPilot: function(pilot) {
 		//Add to collection
-		this.ships.push(ship);
+		this.attr('pilots').push(pilot);
 
-		//Set squad ref on ship
-		ship.squad = this;
+		//Set squad ref on pilot
+		pilot.attr('squad', this);
 	},
 
-	removeShip: function(ship) {
-		var index = this.ships.indexOf(ship);
-		this.ships.splice(index, 1);
+	removePilot: function(pilot) {
+		var index = this.attr('pilots').indexOf(pilot);
+		this.attr('pilots').splice(index, 1);
 	}
 });

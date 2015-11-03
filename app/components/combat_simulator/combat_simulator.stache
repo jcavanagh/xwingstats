@@ -149,7 +149,7 @@
 		<form class="form">
 		<div class="form-group">
 			<label for="ship-add-pilot-skill" class="control-label">Pilot Skill</label>
-			<input type="text" class="form-control" id="ship-add-pilot-skill" can-value="modal.ship.pilotSkill">
+			<input type="text" class="form-control" id="ship-add-pilot-skill" can-value="modal.ship.skill">
 		</div>
 		<div class="form-group">
 			<label for="ship-add-attack" class="control-label">Attack</label>

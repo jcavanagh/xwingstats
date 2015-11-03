@@ -11,26 +11,43 @@
 				<div class="form-group">
 					<label class="col-xs-4 control-label" for="attack">Attack</label>
 					<div class="col-xs-8">
-						<input type="text" class="form-control" id="attack" placeholder="Attack" can-value="attacker.current.attack" {{#config.invert}}disabled{{/config.invert}}>
+						<input type="text" class="form-control" id="attack" placeholder="Attack" can-value="attacker.attack" {{#config.invert}}disabled{{/config.invert}}>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-xs-4 control-label" for="agility">Agility</label>
 					<div class="col-xs-8">
-						<input type="text" class="form-control" id="agility" placeholder="Agility" can-value="defender.current.agility">
+						<input type="text" class="form-control" id="agility" placeholder="Agility" can-value="defender.agility">
 					</div>
 				</div>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
-					<input type="checkbox" can-value="attacker.current.focus">
+					<input type="checkbox" can-click="setFocus" data-ship="attacker">
 					Attacker Focus
 				</label>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
-					<input type="checkbox" can-value="defender.current.focus">
+					<input type="checkbox" can-click="setTargetLock" data-ship="attacker" data-target="defender">
+					Attacker TL
+				</label>
+				<label class="checkbox col-xs-offset-3 col-xs-10">
+					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="emperor_palpatine" data-ship="attacker">
+					Attacker Emperor
+				</label>
+				<div class="col-xs-12"><hr></div>
+				<label class="checkbox col-xs-offset-3 col-xs-10">
+					<input type="checkbox" can-click="setFocus" data-ship="defender">
 					Defender Focus
 				</label>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
-					<input type="checkbox" can-value="defender.current.evade">
+					<input type="checkbox" can-click="setEvade" data-ship="defender">
 					Defender Evade
+				</label>
+				<label class="checkbox col-xs-offset-3 col-xs-10">
+					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="sensor_jammer" data-ship="defender">
+					Defender Sensor Jammer
+				</label>
+				<label class="checkbox col-xs-offset-3 col-xs-10">
+					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="emperor_palpatine" data-ship="defender">
+					Defender Emperor
 				</label>
 			</div>
 		</div>
@@ -45,17 +62,24 @@
 				</tr>
 			</thead>
 			<tbody>
-			{{#each series}}
+			{{#series}}
 				<tr>
 					<td>{{.0}}</td>
 					<td>{{formatPct .1}}</td>
 					<td>{{atLeast .0 ../series}}</td>
 				</tr>
-			{{/each}}	
+			{{/series}}
 			</tbody>
 		</table>
+		{{#if series.length}}
+		{{#unless config.invert}}
+		<div class="container">
+			Expected Damage Per Round: {{damagePerRound}}
+		</div>
+		{{/unless}}
+		{{/if}}
 	</div>
 	<div class="results-chart col-xs-4">
-		<x-chart series={series} width={width} height={height}></x-chart>
+		<x-chart series="{series}" width="{width}" height="{height}"></x-chart>
 	</div>
 </div>

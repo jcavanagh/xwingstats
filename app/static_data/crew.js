@@ -113,7 +113,7 @@ export default [{
 	id: 'outlaw_tech',
 	name: 'Outlaw Tech',
 	points: 2,
-	text: 'After you execute a red manoeuvre, you may assign 1 focus token to your ship. Limited.',
+	text: 'After you execute a red maneuver, you may assign 1 focus token to your ship. Limited.',
 	limited: true,
 	restrictions: {
 		faction: 'scum'
@@ -165,7 +165,7 @@ export default [{
 	id: 'k4',
 	name: 'K4 Security Droid',
 	points: 3,
-	text: 'After executing a green manoeuvre, you may acquire a target lock.',
+	text: 'After executing a green maneuver, you may acquire a target lock.',
 	unique: true,
 	restrictions: {
 		faction: 'scum'

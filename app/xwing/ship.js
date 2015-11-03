@@ -1,50 +1,41 @@
 import can from 'can';
-import ShipStats from './ship_stats';
-import uniqueId from 'app/util/unique_id';
 
 /**
- * Models an X-Wing ship
+ * Models an XWing ship state
  *
- * @param {ShipStats} shipData Data to construct ShipStats
+ * @param {Number}  attack      Number of attack dice
+ * @param {Number}  agility     Number of defense dice
+ * @param {Number}  hull        Number of hull points
+ * @param {Number}  shield      Number of shield points
+ * @param {Number}  maneuvers   Maneuvers available to this ship
  *
- * @typedef {Object} Ship
+ * @type {Object}
+ * @typedef {Ship}
  */
-export default can.Construct.extend({
-	getId: function() {
-		return uniqueId('ship');
-	}
-},{
-	init: function(shipData) {
-		this.id = this.constructor.getId();
-		this.base = new ShipStats(shipData);
-		this.current = new ShipStats(shipData);
-		this.squad = null;	//Assigned by Squad when added
-	},
-
-	//Combat manipulation
-	applyDamage: function(hits) {
-		var shield = this.current.attr('shield');
-
-		//Absorb with shields first
-		if(shield >= hits) {
-			this.current.attr('shield', shield - hits);
-		} else {
-			var hullDamage = hits - shield;
-			this.current.attr('shield', 0);
-			this.current.attr('hull', this.current.attr('hull') - hullDamage);
+export default can.Map.extend({
+	//Ship object
+	//See static ship def for details
+	define: {
+		attack: {
+			type: 'number',
+			value: 0
+		},
+		agility: {
+			type: 'number',
+			value: 0
+		},
+		hull: {
+			type: 'number',
+			value: 0
+		},
+		shield: {
+			type: 'number',
+			value: 0
+		},
+		//2D Maneuver array
+		maneuvers: {
+			type: 'array',
+			value: [[]]
 		}
-	},
-
-	isDestroyed: function() {
-		return this.current.attr('hull') <= 0;
-	},
-
-	//Cleanup
-	reset: function() {
-		this.current = new ShipStats(this.base.attr());
-	},
-
-	toString: function() {
-		return '[' + this.squad.id + ']' + this.current.name + '-' + this.current.type + '(' + this.current.attr('shield') + ', ' + this.current.attr('hull') + ')';
 	}
 });

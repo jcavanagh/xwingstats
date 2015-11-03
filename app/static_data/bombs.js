@@ -23,7 +23,7 @@ export default [{
 	id: 'cluster_mines',
 	name: 'Cluster Mines',
 	points: 4,
-	text: 'Action: Discard this card to drop 1 cluster mine token set. When a ship\'s base or manoeuvre template overlaps a cluster mine token, that token detonates. When one of these bomb tokens detonates, the ship that moved through or overlapped that token rolls 2 attack dice and suffers all damage [hit] rolled. Then discard that token.',
+	text: 'Action: Discard this card to drop 1 cluster mine token set. When a ship\'s base or maneuver template overlaps a cluster mine token, that token detonates. When one of these bomb tokens detonates, the ship that moved through or overlapped that token rolls 2 attack dice and suffers all damage [hit] rolled. Then discard that token.',
 	restrictions: {},
 	sets: [ 'tie-pu' ]
 },{

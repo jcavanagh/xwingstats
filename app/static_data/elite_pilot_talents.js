@@ -116,7 +116,7 @@ export default [{
 	id: 'sot',
 	name: 'Stay on Target',
 	points: 2,
-	text: 'When you reveal a manoeuvre, you may rotate your dial to another manoeuvre with the same speed. Treat that manoeuvre as a red manoeuvre.',
+	text: 'When you reveal a maneuver, you may rotate your dial to another maneuver with the same speed. Treat that maneuver as a red maneuver.',
 	restrictions: {},
 	sets: [ 'yt-2400' ]
 },{
