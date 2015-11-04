@@ -13,6 +13,16 @@ gulp.task('webserver', function() {
 	}));
 });
 
+gulp.task('webserver-prod', function() {
+  gulp.src(__dirname)
+	.pipe(webserver({
+		host: 'jlcavanagh.com',
+		fallback: 'index.html',
+		livereload: false,
+		directoryListing: false
+	}));
+});
+
 gulp.task('less', function () {
 	return gulp.src('./app/**/*.less')
 		.pipe(less())
