@@ -54,28 +54,54 @@
 	</div>
 	<div class="results-table x-panel col-xs-5">
 		<table class="table table-striped">
-			<thead>
-				<tr>
-					<td># {{#config.invert}}Evades{{else}}Hits{{/config.invert}}</td>
-					<td>% Exact</td>
-					<td>% At Least</td>
-				</tr>
-			</thead>
-			<tbody>
-			{{#series}}
-				<tr>
-					<td>{{.0}}</td>
-					<td>{{formatPct .1}}</td>
-					<td>{{atLeast .0 ../series}}</td>
-				</tr>
-			{{/series}}
-			</tbody>
+			{{#config.invert}}
+				<caption>Number of Evades</caption>
+				<thead>
+					<tr>
+						<td>#</td>
+						<td>% Exact</td>
+						<td>% At Least</td>
+					</tr>
+				</thead>
+				<tbody>
+				{{#series}}
+					<tr>
+						<td>{{index}}</td>
+						<td>{{formatPct evade}}</td>
+						<td>{{atLeast index 'evade'}}</td>
+						<td></td>
+					</tr>
+				{{/series}}
+				</tbody>
+			{{else}}
+				<caption>Number of Hits (Crits)</caption>
+				<thead>
+					<tr>
+						<td>#</td>
+						<td>% Damage</td>
+						<td>% Exact</td>
+						<td>% At Least</td>
+					</tr>
+				</thead>
+				<tbody>
+				{{#series}}
+					<tr>
+						<td>{{index}}</td>
+						<td>{{formatPct damage}}</td>
+						<td>{{formatPct hit}} ({{formatPct crit}})</td>
+						<td>{{atLeast index 'hit'}} ({{atLeast index 'crit'}})</td>
+					</tr>
+				{{/series}}
+				</tbody>
+			{{/config.invert}}
 		</table>
-		{{#if series.length}}
+		{{#if avgSeries}}
 		{{#unless config.invert}}
-		<div class="container">
-			Expected Damage Per Round: {{damagePerRound}}
-		</div>
+			{{#with avgSeries}}
+			<div class="container expected-damage">
+				Expected Damage Per Round: {{formatNum damage}} -> {{formatNum hit}} ({{formatNum crit}})
+			</div>
+			{{/with}}
 		{{/unless}}
 		{{/if}}
 	</div>

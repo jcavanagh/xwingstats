@@ -25,11 +25,10 @@ var defend = {
  *
  * @param  {Ship}   attacker The attacking ship
  * @param  {Ship}   defender The defending ship
- * @param  {Object} config   Combat configuration
  * @return {Number}          Number of hits inflicted
  */
-export function singleCombat(attacker, defender, config) {
-	var series = combatSeries(attacker, defender, config);
+export function singleCombat(attacker, defender) {
+	var series = combatDamageSeries(attacker, defender);
 	var rnd = Math.random();
 
 	//Find the probability band that the random number lies within
@@ -50,108 +49,167 @@ export function singleCombat(attacker, defender, config) {
  *
  * @param  {Ship}   attacker The attacking ship
  * @param  {Ship}   defender The defending ship
- * @param  {Object} config   Combat configuration
  * @return {Number}          Expected hits
  */
-export function averageCombatSeries(attacker, defender, config) {
-	var series = combatSeries(attacker, defender, config);
+export function averageCombatDamageSeries(attacker, defender) {
+	var series = combatDamageSeries(attacker, defender);
 
-	return _.reduce(series, function(accum, item) {
-		return accum + (item[0] * item[1]);
-	}, 0);
-}
+	if(series && series.length) {
+		return _.reduce(series, function(accum, item) {
+			_.forOwn(item, function(val, key, item) {
+				if(key !== 'index') {
+					accum[key] = accum[key] || 0;
+					accum[key] += (val * item.index);
+				}
+			});
 
-/**
- * Calculates a series of hit/evade probabilities in a simple opposed atk/def die roll
- *
- * @param  {Ship}   attacker The attacking ship
- * @param  {Ship}   defender The defending ship
- * @param  {Object} config   Combat configuration
- * @return {Array}           Array of ordered pairs [# hits, probability]
- */
-export function combatSeries(attacker, defender, config) {
-	var fn = combatHitChance;
-	var numDice = attacker.attr('attack') + 1;
-
-	if(config && config.invert) {
-		fn = combatEvadeChance;
-		numDice = defender.attr('agility') + 1 + getEvadeModifier(attacker, defender, config);
+			return accum;
+		}, {});
 	}
-
-	//Upper bound on hits/evades is number of attack/defense dice
-	var combatResults = _.times(numDice, function(index) {
-		return [ index, fn(index, attacker, defender, config) ];
-	});
-
-	return combatResults;
 }
 
 /**
- * Determines the probability of a specific number of hits with an opposed die roll
+ * Creates a combat series item for a particular target damage number, containing probabilities for a specified number of crits and hits
+ * Series item sample: {
+ *     index: 0,
+ *     hit: 0.5,
+ *     crit: 0.125
+ * }
  *
- * @param  {Number} targetHits Target number of hits
- * @param  {Ship}   attacker   The attacking ship
- * @param  {Ship}   defender   The defending ship
- * @return {Number}            Probability of given number of hits
+ * @param  {Ship}   attacker     The attacking ship
+ * @param  {Ship}   defender     The defending ship
+ * @return {Array}               Probability of: [ hits, crits ]
  */
-export function combatHitChance(targetHits, attacker, defender, config) {
+export function combatDamageSeries(attacker, defender) {
 	//Calculate chances for specific numbers of hits/evades
-	var hits = getHitOrCritSeries(attacker, defender, config);
-	var evades = getEvadeSeries(attacker, defender, config);
+	var numDice = attacker.attr('attack') + 1;
+	var hitSeries = getHitSeries(attacker, defender);
+	var critSeries = getCritSeries(attacker, defender);
+	var hitOrCritSeries = getHitOrCritSeries(attacker, defender);
+	var evades = getEvadeSeries(attacker, defender);
 
-	//The possibility for a hit at a particular point is the chance that they hit AND do not evade
-	var combatResults = _.sum(_.map(hits, function(hitChance, hitIndex) {
-		//FIXME: Not entirely correct, crits cannot be sensor jammed, so all-crit rolls would be incorrect
-		if(defender.getUpgrade('sensor_jammer') && !attacker.attr('focus')) {
-			hitIndex -= 1;
+	//The possibility for a damage at a particular point is the chance that they damage AND do not evade
+	return _.map(_.range(numDice), function(targetDamage) {
+		var damageProbabilities = _(_.range(numDice)).map(function(damageIndex) {
+			var hitChance = hitSeries[damageIndex];
+			var critChance = critSeries[damageIndex];
+			var damageChance = hitOrCritSeries[damageIndex];
+
+			//The probability of a particular damage count is the sum of probabilities for that
+			//damage quantity at each level of evasion
+			//Returns [ sumOfHitChance, sumOfCritChance ]
+			return _(evades).map(function(evadeChance, evadeIndex) {
+				//Evade amount goes up by one if we have an evade token, since it adds an evade result to our pool
+				if(defender.attr('evade')) {
+					evadeIndex += 1;
+				}
+
+				//Zero damage is an edge case - if damage target is zero, then count damage <= evades
+				var isSpecialZero = targetDamage === 0 && damageIndex <= evadeIndex;
+				//Otherwise, counts if damage - evades === target
+				var isDamage = (damageIndex - evadeIndex) === targetDamage;
+
+				if(isSpecialZero || isDamage) {
+					//FIXME: Hits must be cancelled first
+					return [ damageChance * evadeChance, hitChance * evadeChance, critChance * evadeChance ];
+				}
+
+				return [0, 0];
+			}).thru(function(x) { return _.zip.apply(x, x); }).map(_.sum).value();
+		}).thru(function(x) { return _.zip.apply(x, x); }).map(_.sum).value();
+
+		return {
+			index: targetDamage,
+			damage: damageProbabilities[0] || 0,
+			hit: damageProbabilities[1] || 0,
+			crit: damageProbabilities[2] || 0,
 		}
-
-		//The probability of a particular hit count is the sum of probabilities for that
-		//hit quantity at each level of evasion
-		return _.sum(_.map(evades, function(evadeChance, evadeIndex) {
-			//Evade amount goes up by one if we have an evade token
-			if(defender.attr('evade')) {
-				evadeIndex += 1;
-			}
-
-			//Zero is an edge case - counts if hits are zero OR hits <= evades
-			var isZeroHit = targetHits === 0 && hitIndex <= evadeIndex;
-			//Otherwise, counts if hits - evades == target
-			var isHit = (hitIndex - evadeIndex) === targetHits;
-
-			if(isZeroHit || isHit) {
-				return hitChance * evadeChance;
-			}
-
-			return 0;
-		}));
-	}));
-
-	return combatResults;
+	});
 }
 
 /**
  * Determines the probability of a specific number of evades a ship will roll, with any modifiers the attacker might create
  *
- * @param  {Number} targetHits Target number of evades
  * @param  {Ship}   attacker   The attacking ship
  * @param  {Ship}   defender   The defending ship
  * @return {Number}            Probability of given number of evades
  */
-export function combatEvadeChance(targetEvades, attacker, defender, config) {
-	var modifiedEvadeChance = getModifiedEvadeChance(attacker, defender, config);
-	var evades = getEvadeSeries(attacker, defender, config);
+export function combatEvadeSeries(attacker, defender) {
+	var numDice = defender.attr('agility') + 1 + getEvadeModifier(attacker, defender);
+	var modifiedEvadeChance = getModifiedEvadeChance(attacker, defender);
+	var evades = getEvadeSeries(attacker, defender);
 
-	return _.sum(_.map(evades, function(evadeChance, evadeIndex) {
-		if(defender.attr('evade')) {
-			evadeIndex += 1;
+	return _.map(_.range(numDice), function(targetEvades) {
+		var evadeProbability = _.sum(_.map(evades, function(evadeChance, evadeIndex) {
+			if(defender.attr('evade')) {
+				evadeIndex += 1;
+			}
+
+			return evadeIndex === targetEvades ? evadeChance : 0;
+		}));
+
+		return {
+			index: targetEvades,
+			evade: evadeProbability || 0
 		}
-		return evadeIndex === targetEvades ? evadeChance : 0;
-	}));
+	});
+}
+
+//Binomial probability generators
+function getHitOrCritSeries(attacker, defender) {
+	var modifiedHitOrCritChance = getModifiedHitOrCritChance(attacker, defender);
+	var atk = attacker.attr('attack');
+
+	return _.times(atk + 1, function(index) {
+		return Stats.binomialExperiment(atk, index, modifiedHitOrCritChance, 1 - modifiedHitOrCritChance);
+	});
+}
+
+function getCritSeries(attacker, defender) {
+	var modifiedCritChance = getModifiedCritChance(attacker, defender);
+	var atk = attacker.attr('attack');
+
+	return _.times(atk + 1, function(index) {
+		return Stats.binomialExperiment(atk, index, modifiedCritChance, 1 - modifiedCritChance);
+	});
+}
+
+function getHitSeries(attacker, defender) {
+	var modifiedHitChance = getModifiedHitChance(attacker, defender);
+	var atk = attacker.attr('attack');
+
+	return _.times(atk + 1, function(index) {
+		return Stats.binomialExperiment(atk, index, modifiedHitChance, 1 - modifiedHitChance);
+	});
+}
+
+function getEvadeSeries(attacker, defender) {
+	var modifiedEvadeChance = getModifiedEvadeChance(attacker, defender);
+	var def = defender.attr('agility');
+
+	return _.times(def + 1, function(index) {
+		return Stats.binomialExperiment(def, index, modifiedEvadeChance, 1 - modifiedEvadeChance);
+	});
 }
 
 //Private helpers
-function getModifiedHitChance(attacker, defender, config) {
+function getModifiedHitOrCritChance(attacker, defender) {
+	var focusMod = getFocusModifier(attacker);
+
+	if(attacker.getTargetLock(defender)) {
+		if(focusMod) {
+			//If focused, rerolls apply only to blanks
+			return (attack.blank * (attack.hit + attack.crit + attack.focus)) + (attack.hit + attack.crit + attack.focus);
+		} else {
+			//If not focused, rerolls apply to focus or blank
+			return ((attack.blank + attack.focus) * (attack.hit + attack.crit)) + (attack.hit + attack.crit);
+		}
+	} else {
+		return (attack.hit + attack.crit) + (attack.focus * focusMod);
+	}
+}
+
+function getModifiedHitChance(attacker, defender) {
 	var focusMod = getFocusModifier(attacker);
 
 	if(attacker.getTargetLock(defender)) {
@@ -167,7 +225,7 @@ function getModifiedHitChance(attacker, defender, config) {
 	}
 }
 
-function getModifiedCritChance(attacker, defender, config) {
+function getModifiedCritChance(attacker, defender) {
 	if(attacker.getTargetLock(defender)) {
 		return ((1 - attack.crit) * attack.crit) + attack.crit;
 	} else {
@@ -175,47 +233,11 @@ function getModifiedCritChance(attacker, defender, config) {
 	}
 }
 
-function getModifiedEvadeChance(attacker, defender, config) {
+function getModifiedEvadeChance(attacker, defender) {
 	return defend.evade + (defend.focus * getFocusModifier(defender));
 }
 
-function getCritSeries(attacker, defender, config) {
-	var modifiedCritChance = getModifiedCritChance(attacker, defender, config);
-	var atk = attacker.attr('attack');
-
-	return _.times(atk + 1, function(index) {
-		return Stats.binomialExperiment(atk, index, modifiedCritChance, 1 - modifiedCritChance);
-	});
-}
-
-function getHitSeries(attacker, defender, config) {
-	var modifiedHitChance = getModifiedHitChance(attacker, defender, config);
-	var atk = attacker.attr('attack');
-
-	return _.times(atk + 1, function(index) {
-		return Stats.binomialExperiment(atk, index, modifiedHitChance, 1 - modifiedHitChance);
-	});
-}
-
-function getHitOrCritSeries(attacker, defender, config) {
-	var modifiedHitOrCritChance = getModifiedHitChance(attacker, defender, config) + getModifiedCritChance(attacker, defender, config);
-	var atk = attacker.attr('attack');
-
-	return _.times(atk + 1, function(index) {
-		return Stats.binomialExperiment(atk, index, modifiedHitOrCritChance, 1 - modifiedHitOrCritChance);
-	});
-}
-
-function getEvadeSeries(attacker, defender, config) {
-	var modifiedEvadeChance = getModifiedEvadeChance(attacker, defender, config);
-	var def = defender.attr('agility');
-
-	return _.times(def + 1, function(index) {
-		return Stats.binomialExperiment(def, index, modifiedEvadeChance, 1 - modifiedEvadeChance);
-	});
-}
-
-function getEvadeModifier(attacker, defender, config) {
+function getEvadeModifier(attacker, defender) {
 	if(_.isNumber(defender.attr('evade'))) {
 		return defender.attr('evade');
 	}
@@ -223,10 +245,6 @@ function getEvadeModifier(attacker, defender, config) {
 	return defender.attr('evade') ? 1 : 0;
 }
 
-function getFocusModifier(ship, config) {
-	if(_.isNumber(ship.attr('focus'))) {
-		return ship.attr('focus');
-	}
-
+function getFocusModifier(ship) {
 	return ship.attr('focus') ? 1 : 0;
 }

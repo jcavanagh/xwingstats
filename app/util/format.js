@@ -9,7 +9,7 @@ export function percent(val, places) {
 export function number(val, places) {
 	//It could be a compute
 	val = _.isFunction(val) ? val() : val;
-	places = places || 3;
+	places = places || 2;
 
 	//Return empty string if we have no value
 	if(val == null) {

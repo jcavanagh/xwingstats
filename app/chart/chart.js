@@ -9,6 +9,12 @@ export default can.Component.extend({
 	viewModel: {
 		series: [],
 		type: 'bar',
+		colors: {
+			damage: 'orange',
+			hit: 'yellow',
+			crit: 'red',
+			evade: 'green'
+		},
 
 		width: 500,
 		height: 500,

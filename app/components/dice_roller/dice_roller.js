@@ -1,4 +1,5 @@
 import can from 'can';
+import define from 'can/map/define/define';
 import diceRollerTemplate from './dice_roller.stache!';
 
 import Chart from 'app/chart/chart';
@@ -12,6 +13,14 @@ export default can.Component.extend({
 	tag: 'x-dice-roller',
 	template: diceRollerTemplate,
 	viewModel: {
+		define: {
+			series: {
+				value: []
+			},
+
+			avgSeries: {}
+		},
+
 		attacker: new Pilot(),
 		defender: new Pilot(),
 
@@ -22,7 +31,6 @@ export default can.Component.extend({
 		},
 
 		//Chart stuff
-		series: [],
 		width: 300,
 		height: 300,
 
@@ -69,24 +77,28 @@ export default can.Component.extend({
 		}
 	},
 	helpers: {
-		atLeast: function(targetHits, series) {
-			//If its zero or more, it's obviously 100% - don't bother showing it
-			if(targetHits() === 0) { return '-'; }
+		atLeast: function(index, key) {
+			var series = this.attr('series').attr();
+			index = _.isFunction(index) ? index() : index;
+			key = _.isFunction(key) ? key() : key;
 
-			//Comes in as ordered pairs, we only care about the second point
-			var hitChances = _.map(series(), function(s) { return s[1]; });
-			return Format.percent(_.sum(_.takeRight(hitChances, hitChances.length - targetHits())));
+			//If its zero or more, it's obviously 100% - don't bother showing it
+			if(index === 0) { return '-'; }
+
+			//Take a portion of the series up to the specified index
+			var keyData = _.pluck(series, key);
+			return Format.percent(_.sum(_.takeRight(keyData, keyData.length - index)));
 		},
 		formatPct: function(val) {
 			return Format.percent(val);
 		},
-		damagePerRound: function(options) {
-			var series = options.context.attr('series');
-			var expectedDamage = _.reduce(series, function(accum, item) {
-				return accum + (item[0] * item[1]);
-			}, 0);
-
-			return Format.number(expectedDamage);
+		formatNum: function(val) {
+			return Format.number(val);
+		},
+		getDamage: function(index) {
+			index = _.isFunction(index) ? index() : index;
+			var item = this.attr('series').attr(index);
+			return Format.percent((item['hit'] + item['crit']) || 0);
 		}
 	},
 	events: {
@@ -95,8 +107,19 @@ export default can.Component.extend({
 		},
 
 		calculate: function() {
-			var series = Dice.combatSeries(this.viewModel.attacker, this.viewModel.defender, this.viewModel.config);
+			var config = this.viewModel.attr('config');
+			var series = [];
+			var avgSeries = null;
+
+			if(config && config.invert) {
+				series = Dice.combatEvadeSeries(this.viewModel.attacker, this.viewModel.defender);
+			} else {
+				series = Dice.combatDamageSeries(this.viewModel.attacker, this.viewModel.defender);
+				avgSeries = Dice.averageCombatDamageSeries(this.viewModel.attacker, this.viewModel.defender);
+			}
+
 			this.viewModel.attr('series', series);
+			this.viewModel.attr('avgSeries', avgSeries);
 		},
 
 		'{viewModel.attacker} change': 'calculate',
