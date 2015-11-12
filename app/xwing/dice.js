@@ -155,6 +155,12 @@ export function combatEvadeSeries(attacker, defender) {
 	});
 }
 
+//Series interceptors
+function modifyDamageDicePool(dice, attacker, defender) {
+	//No effects, yet
+	return dice;
+}
+
 //Binomial probability generators
 function getHitOrCritSeries(attacker, defender) {
 	var modifiedHitOrCritChance = getModifiedHitOrCritChance(attacker, defender);
