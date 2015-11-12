@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import should from 'should';
 
-import Pilot from 'app/xwing/pilot';
-import * as Dice from 'app/xwing/dice';
+import Pilot from 'app/models/pilot/pilot';
+import * as Dice from 'app/models/dice/dice';
 
 //Approximation fudge factor for results
 var FUDGE = 0.01;

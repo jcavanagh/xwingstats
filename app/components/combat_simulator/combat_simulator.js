@@ -1,12 +1,12 @@
 import can from 'can';
 import csTemplate from './combat_simulator.stache!';
 
-import * as Combat from 'app/xwing/combat';
-import * as Dice from 'app/xwing/dice';
-import * as Format from 'app/util/format';
-import Pilot from 'app/xwing/pilot';
-import Squad from 'app/xwing/squad';
+import * as Combat from 'app/models/combat/combat';
+import * as Dice from 'app/models/dice/dice';
+import Pilot from 'app/models/pilot/pilot';
+import Squad from 'app/models/squad/squad';
 import * as Stats from 'app/math/stats';
+import * as Format from 'app/util/format';
 
 import * as Lifespan from './metrics/lifespan';
 import * as DamageOutput from './metrics/damage_output';

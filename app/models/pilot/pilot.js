@@ -1,8 +1,6 @@
 import can from 'can';
 import uniqueId from 'app/util/unique_id';
 
-import Ship from 'app/xwing/ship';
-
 /**
  * Applies upgrades and effects to a particular stat
  *
@@ -12,72 +10,6 @@ import Ship from 'app/xwing/ship';
 function applyEffects(stat) {
 	
 }
-
-/**
- * Models an XWing pilot state
- *
- * @param {String}  name        Pilot name
- * @param {String}  faction     Pilot faction
- * @param {Ship}    ship        Base ship data
- * @param {Array}   upgrades    Collection of Upgrades
- * @param {String}  squad       Squad ID
- * @param {Boolean} unique      Unique pilot or not
- * @param {Number}  skill       Pilot skill value
- *
- * @param {Boolean} focus       Number of focus tokens
- * @param {Boolean} evade       Number of evade tokens
- * @param {Boolean} stress      Number of stress tokens
- *
- * @type {Object}
- * @typedef {Pilot}
- */
-// var PilotStats = can.Map.extend({
-// 	init: function(shipStats) {
-// 		this.attr('ship', new Ship(shipStats));
-// 	},
-
-// 	define: {
-// 		//Pilot name
-// 		name: {
-// 			value: '',
-// 			type: 'string'
-// 		},
-
-// 		//Faction object
-// 		faction: {},
-
-// 		//Ship object
-// 		//See static ship def for details
-// 		ship: {},
-
-// 		//Collection of upgrade objects
-// 		upgrades: {
-// 			type: 'array'
-// 		},
-
-// 		//Squad assignment
-// 		squad: {
-// 			type: 'string'
-// 		},
-
-// 		//Pilot uniqueness
-// 		unique: {
-// 			value: false,
-// 			type: 'boolean'
-// 		},
-
-// 		//Tokens and such
-// 		focus: {
-// 			type: 'number'
-// 		},
-// 		evade: {
-// 			type: 'number'
-// 		},
-// 		stress: {
-// 			type: 'number'
-// 		}
-// 	}
-// });
 
 /**
  * Models an X-Wing pilot

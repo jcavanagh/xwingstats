@@ -6,8 +6,8 @@ import Chart from 'app/chart/chart';
 
 import * as Format from 'app/util/format';
 
-import * as Dice from 'app/xwing/dice';
-import Pilot from 'app/xwing/pilot';
+import * as Dice from 'app/models/dice/dice';
+import Pilot from 'app/models/pilot/pilot';
 
 export default can.Component.extend({
 	tag: 'x-dice-roller',

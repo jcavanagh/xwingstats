@@ -1,7 +1,7 @@
 import  _ from 'lodash';
 
-import CombatLog from 'app/xwing/combat_log';
-import * as Dice from 'app/xwing/dice';
+import CombatLog from 'app/models/combat_log/combat_log';
+import * as Dice from 'app/models/dice/dice';
 
 //Map fire modes to functions
 var fireModes = {

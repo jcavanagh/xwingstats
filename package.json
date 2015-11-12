@@ -9,6 +9,7 @@
     "d3": "^3.5.8",
     "jquery": "^2.1.4",
     "lodash": "^3.10.1",
+    "meld": "^1.3.2",
     "mocha": "^2.3.3",
     "should": "^7.1.1",
     "steal": "^0.12.3",
@@ -34,6 +35,7 @@
       "can/*": "node_modules/can/*.js",
       "bootstrap": "node_modules/bootstrap/dist/js/bootstrap.min.js",
       "lodash": "node_modules/lodash/index.js",
+      "meld": "node_modules/meld/meld.js",
       "should": "node_modules/should/should.min.js"
     },
     "ext": {
