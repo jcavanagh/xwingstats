@@ -20,46 +20,52 @@
 						<input type="text" class="form-control" id="agility" placeholder="Agility" can-value="defender.agility">
 					</div>
 				</div>
+
+				<label class="col-xs-4 control-label">Attacker</label>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
-					<input type="checkbox" can-click="setFocus" data-ship="attacker">
-					Attacker Focus
+					<input type="checkbox" can-click="setFocus" data-ship="attacker" />
+					Focus
 				</label>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
-					<input type="checkbox" can-click="setTargetLock" data-ship="attacker" data-target="defender">
-					Attacker TL
+					<input type="checkbox" can-click="setTargetLock" data-ship="attacker" data-target="defender" />
+					TL
+				</label>
+				<div class="col-xs-12"><hr class="thin"></div>
+				<label class="checkbox col-xs-offset-3 col-xs-10">
+					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="emperor_palpatine" data-ship="attacker" />
+					Emperor Palpatine
 				</label>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
-					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="emperor_palpatine" data-ship="attacker">
-					Attacker Emperor
+					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="lone_wolf" data-ship="attacker" />
+					Lone Wolf
+				</label>
+				
+				<label class="checkbox col-xs-offset-3 col-xs-10">
+					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="zuckuss" data-ship="attacker" />
+					Zuckuss
+				</label>
+
+				<label class="col-xs-4 control-label">Defender</label>
+				<label class="checkbox col-xs-offset-3 col-xs-10">
+					<input type="checkbox" can-click="setEvade" data-ship="defender" />
+					Evade
 				</label>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
-					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="lone_wolf" data-ship="attacker">
-					Attacker Lone Wolf
+					<input type="checkbox" can-click="setFocus" data-ship="defender" />
+					Focus
+				</label>
+				<div class="col-xs-12"><hr class="thin"></div>
+				<label class="checkbox col-xs-offset-3 col-xs-10">
+					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="emperor_palpatine" data-ship="defender" />
+					Emperor Palpatine
 				</label>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
-					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="zuckuss" data-ship="attacker">
-					Attacker Zuckuss
-				</label>
-				<div class="col-xs-12"><hr></div>
-				<label class="checkbox col-xs-offset-3 col-xs-10">
-					<input type="checkbox" can-click="setFocus" data-ship="defender">
-					Defender Focus
+					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="lone_wolf" data-ship="defender" />
+					Lone Wolf
 				</label>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
-					<input type="checkbox" can-click="setEvade" data-ship="defender">
-					Defender Evade
-				</label>
-				<label class="checkbox col-xs-offset-3 col-xs-10">
-					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="sensor_jammer" data-ship="defender">
-					Defender Sensor Jammer
-				</label>
-				<label class="checkbox col-xs-offset-3 col-xs-10">
-					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="emperor_palpatine" data-ship="defender">
-					Defender Emperor
-				</label>
-				<label class="checkbox col-xs-offset-3 col-xs-10">
-					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="lone_wolf" data-ship="defender">
-					Defender Lone Wolf
+					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="sensor_jammer" data-ship="defender" />
+					Sensor Jammer
 				</label>
 			</div>
 		</div>
