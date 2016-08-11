@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import meld from 'meld';
 import * as Stats from 'app/math/stats';
 
 import { ATTACK, AGILITY } from './faces';

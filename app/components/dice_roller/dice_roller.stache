@@ -32,6 +32,10 @@
 					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="emperor_palpatine" data-ship="attacker">
 					Attacker Emperor
 				</label>
+				<label class="checkbox col-xs-offset-3 col-xs-10">
+					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="zuckuss" data-ship="attacker">
+					Attacker Zuckuss
+				</label>
 				<div class="col-xs-12"><hr></div>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
 					<input type="checkbox" can-click="setFocus" data-ship="defender">

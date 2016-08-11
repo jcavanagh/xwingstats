@@ -1,4 +1,5 @@
 import meld from 'meld';
+import { AGILITY } from './faces';
 
 //Series rotater
 function smushRight(series) {
@@ -69,6 +70,26 @@ export var emperor_palpatine = {
 			}
 
 			return series;
+		});
+	}
+}
+
+export var zuckuss = {
+	priority: 99,
+	fn: function(scope) {
+		return meld.around(scope, [ 'getModifiedEvadeChance' ], function(joinpoint) {
+			var attacker = joinpoint.target.attacker;
+			var defender = joinpoint.target.defender;
+			var series = joinpoint.proceed();
+
+			if(attacker.getUpgrade('zuckuss')) {
+				//Force reroll on blanks, or blanks and focus if defender is focused
+				if(defender.focus) {
+					return Math.pow(AGILITY.EVADE + AGILITY.FOCUS, 2);
+				} else {
+					return Math.pow(AGILITY.EVADE, 2);
+				}
+			}
 		});
 	}
 }
