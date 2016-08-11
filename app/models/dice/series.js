@@ -75,12 +75,18 @@ export default class DiceSeries {
 		var hitOrCritSeries = this.getHitOrCritSeries();
 		var evades = this.getEvadeSeries();
 
+		console.log("DAMAGE SERIES");
+		console.log('evades:', evades);
 		//The possibility for a damage at a particular point is the chance that they damage AND do not evade
 		return _.map(_.range(numDice), function(targetDamage) {
 			var damageProbabilities = _(_.range(numDice)).map(function(damageIndex) {
 				var hitChance = hitSeries[damageIndex];
 				var critChance = critSeries[damageIndex];
 				var damageChance = hitOrCritSeries[damageIndex];
+
+				console.log('hitChance:', hitChance);
+				console.log('critChance:', critChance);
+				console.log('damageChance:', damageChance);
 
 				//The probability of a particular damage count is the sum of probabilities for that
 				//damage quantity at each level of evasion
@@ -105,12 +111,15 @@ export default class DiceSeries {
 				}).thru(function(x) { return _.zip.apply(x, x); }).map(_.sum).value();
 			}).thru(function(x) { return _.zip.apply(x, x); }).map(_.sum).value();
 
-			return {
+			var seriesVals = {
 				index: targetDamage,
 				damage: damageProbabilities[0] || 0,
 				hit: damageProbabilities[1] || 0,
 				crit: damageProbabilities[2] || 0,
 			}
+
+			console.log(seriesVals);
+			return seriesVals;
 		});
 	}
 
@@ -148,39 +157,50 @@ export default class DiceSeries {
 		var modifiedHitOrCritChance = this.getModifiedHitOrCritChance();
 		var atk = this.attacker.attr('attack');
 
-		return _.times(atk + 1, function(index) {
-			return Stats.binomialExperiment(atk, index, modifiedHitOrCritChance, 1 - modifiedHitOrCritChance);
-		});
+		return this.binomialExperiment(atk, modifiedHitOrCritChance);
 	}
 
 	getCritSeries() {
 		var modifiedCritChance = this.getModifiedCritChance();
 		var atk = this.attacker.attr('attack');
 
-		return _.times(atk + 1, function(index) {
-			return Stats.binomialExperiment(atk, index, modifiedCritChance, 1 - modifiedCritChance);
-		});
+		return this.binomialExperiment(atk, modifiedCritChance);
 	}
 
 	getHitSeries() {
 		var modifiedHitChance = this.getModifiedHitChance();
 		var atk = this.attacker.attr('attack');
 
-		return _.times(atk + 1, function(index) {
-			return Stats.binomialExperiment(atk, index, modifiedHitChance, 1 - modifiedHitChance);
-		});
+		return this.binomialExperiment(atk, modifiedHitChance);
 	}
 
 	getEvadeSeries() {
 		var modifiedEvadeChance = this.getModifiedEvadeChance();
 		var def = this.defender.attr('agility');
 
-		return _.times(def + 1, function(index) {
-			return Stats.binomialExperiment(def, index, modifiedEvadeChance, 1 - modifiedEvadeChance);
-		});
+		return this.binomialExperiment(def, modifiedEvadeChance);
 	}
 
 	//Private helpers
+	rerollSeries(series, numDice, numRerolls, rerollChance, rerollSuccessChance) {
+		//NB: This assumes the rerollSuccessChance is the success chance implied by the original series
+		//    If those concepts disagree, the reroll expected value will not be accurate
+		var rerollableSeries = this.binomialExperiment(numDice, rerollChance);
+		var pctReroll = _.reduce(rerollableSeries, function(total, seriesItem, index) {
+			//Odds of rolling at least one rerollable die
+			return index === 0 ? total : total + seriesItem;
+		}, 0);
+		var rerollValue = numRerolls * rerollSuccessChance * pctReroll;
+
+		return this.binomialExperiment(numDice, rerollSuccessChance + (rerollValue / numDice));
+	}
+
+	binomialExperiment(dice, successChance) {
+		return _.times(dice + 1, function(index) {
+			return Stats.binomialExperiment(dice, index, successChance, 1 - successChance);
+		});
+	}
+
 	getModifiedHitOrCritChance() {
 		var focusMod = this.getFocusModifier(this.attacker);
 
@@ -235,5 +255,36 @@ export default class DiceSeries {
 
 	getFocusModifier(ship) {
 		return ship.attr('focus') ? 1 : 0;
+	}
+
+	//Series rotater
+	smushRight(series) {
+		//Zero- or one-length series are not valid
+		if(!series || !series.length || series.length == 1) { return; }
+
+		//Rotate right 1
+		series.unshift(series.pop());
+
+		///Combine best and rotated second best
+		var last = series.length - 1;
+		series[last] = series[0] + series[last];
+
+		//Zero out zero
+		series[0] = 0;
+	}
+
+	smushLeft(series) {
+		//Zero- or one-length series are not valid
+		if(!series || !series.length || series.length == 1) { return; }
+
+		//Rotate left 1
+		series.push(series.shift());
+
+		///Combine worst and rotated second worst
+		var last = series.length - 1;
+		series[last] = series[0] + series[last];
+
+		//Zero out last
+		series[last] = 0;
 	}
 }

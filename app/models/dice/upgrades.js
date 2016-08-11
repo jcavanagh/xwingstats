@@ -1,48 +1,18 @@
 import meld from 'meld';
-import { AGILITY } from './faces';
-
-//Series rotater
-function smushRight(series) {
-	//Zero- or one-length series are not valid
-	if(!series || !series.length || series.length == 1) { return ; }
-
-	//Rotate right 1
-	series.unshift(series.pop());
-
-	///Combine best and rotated second best
-	var last = series.length - 1;
-	series[last] = series[0] + series[last];
-
-	//Zero out zero
-	series[0] = 0;
-}
-
-function smushLeft(series) {
-	//Zero- or one-length series are not valid
-	if(!series || !series.length || series.length == 1) { return ; }
-
-	//Rotate left 1
-	series.push(series.shift());
-
-	///Combine worst and rotated second worst
-	var last = series.length - 1;
-	series[last] = series[0] + series[last];
-
-	//Zero out last
-	series[last] = 0;
-}
+import { ATTACK, AGILITY } from './faces';
+import * as Stats from 'app/math/stats';
 
 export var sensor_jammer = {
 	priority: 1,
 	fn: function(scope) {
-		return meld.around(scope, [ 'getHitOrCritSeries', 'getHitSeries'], function(joinpoint) {
+		return meld.around(scope, [ 'getHitOrCritSeries', 'getHitSeries' ], function(joinpoint) {
 			var attacker = joinpoint.target.attacker;
 			var defender = joinpoint.target.defender;
 			var series = joinpoint.proceed();
 
 			//Sensor jammer effectively removes an attack die if the attacker is not focused
 			if(defender.getUpgrade('sensor_jammer') && !attacker.focus) {
-				smushLeft(series);
+				joinpoint.target.smushLeft(series);
 			}
 
 			return series;
@@ -53,7 +23,7 @@ export var sensor_jammer = {
 export var emperor_palpatine = {
 	priority: 99,
 	fn: function(scope) {
-		return meld.around(scope, [ 'getHitOrCritSeries', 'getCritSeries', 'getEvadeSeries'], function(joinpoint) {
+		return meld.around(scope, [ 'getHitOrCritSeries', 'getCritSeries', 'getEvadeSeries' ], function(joinpoint) {
 			var attacker = joinpoint.target.attacker;
 			var defender = joinpoint.target.defender;
 			var series = joinpoint.proceed();
@@ -61,11 +31,11 @@ export var emperor_palpatine = {
 			//The Emperor guarantees at least one crit/evade, so the entire distribution shifts
 			if(joinpoint.method === 'getEvadeSeries') {
 				if(defender.getUpgrade('emperor_palpatine')) {
-					smushRight(series);
+					joinpoint.target.smushRight(series);
 				}
 			} else if(joinpoint.method === 'getCritSeries' || joinpoint.method === 'getHitOrCritSeries') {
 				if(attacker.getUpgrade('emperor_palpatine')) {
-					smushRight(series);
+					joinpoint.target.smushRight(series);
 				}
 			}
 
@@ -75,7 +45,7 @@ export var emperor_palpatine = {
 }
 
 export var zuckuss = {
-	priority: 99,
+	priority: 98,
 	fn: function(scope) {
 		return meld.around(scope, [ 'getModifiedEvadeChance' ], function(joinpoint) {
 			var attacker = joinpoint.target.attacker;
@@ -84,7 +54,43 @@ export var zuckuss = {
 
 			if(attacker.getUpgrade('zuckuss')) {
 				return Math.pow(evadeChance, 2);
+			} else {
+				return evadeChance;
 			}
+		});
+	}
+}
+
+export var lone_wolf = {
+	priority: 2,
+	fn: function(scope) {
+		return meld.around(scope, [ 'getHitOrCritSeries', 'getHitSeries', 'getCritSeries', 'getEvadeSeries'], function(joinpoint) {
+			var attacker = joinpoint.target.attacker;
+			var defender = joinpoint.target.defender;
+			var series = joinpoint.proceed();
+
+			if(joinpoint.method === 'getEvadeSeries') {
+				if(defender.getUpgrade('lone_wolf')) {
+					//Calculate the odds of rolling N blanks
+					//If we roll a blank, we can reroll one with Lone Wolf
+					return joinpoint.target.rerollSeries(series, defender.attr('agility'), 1, AGILITY.BLANK, joinpoint.target.getModifiedEvadeChance());
+				}
+			} else if(joinpoint.method === 'getHitSeries' || joinpoint.method === 'getCritSeries' || joinpoint.method === 'getHitOrCritSeries') {
+				if(attacker.getUpgrade('lone_wolf')) {
+					//Due to the no-multi-reroll rule, target locks supersede lone wolf on the attack
+					if(!attacker.getTargetLock(defender)) {
+						if(joinpoint.method === 'getHitSeries') {
+							return joinpoint.target.rerollSeries(series, attacker.attr('attack'), 1, ATTACK.BLANK, joinpoint.target.getModifiedHitChance());
+						} else if(joinpoint.method === 'getCritSeries') {
+							return joinpoint.target.rerollSeries(series, attacker.attr('attack'), 1, ATTACK.BLANK, joinpoint.target.getModifiedCritChance());
+						} else if(joinpoint.method === 'getHitOrCritSeries') {
+							return joinpoint.target.rerollSeries(series, attacker.attr('attack'), 1, ATTACK.BLANK, joinpoint.target.getModifiedHitOrCritChance());
+						}
+					}
+				}
+			}
+
+			return series;
 		});
 	}
 }

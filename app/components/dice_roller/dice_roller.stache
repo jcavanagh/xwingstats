@@ -33,6 +33,10 @@
 					Attacker Emperor
 				</label>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
+					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="lone_wolf" data-ship="attacker">
+					Attacker Lone Wolf
+				</label>
+				<label class="checkbox col-xs-offset-3 col-xs-10">
 					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="zuckuss" data-ship="attacker">
 					Attacker Zuckuss
 				</label>
@@ -52,6 +56,10 @@
 				<label class="checkbox col-xs-offset-3 col-xs-10">
 					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="emperor_palpatine" data-ship="defender">
 					Defender Emperor
+				</label>
+				<label class="checkbox col-xs-offset-3 col-xs-10">
+					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="lone_wolf" data-ship="defender">
+					Defender Lone Wolf
 				</label>
 			</div>
 		</div>
