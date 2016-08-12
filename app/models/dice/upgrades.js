@@ -79,18 +79,50 @@ export var lone_wolf = {
 				if(attacker.getUpgrade('lone_wolf')) {
 					//Due to the no-multi-reroll rule, target locks supersede lone wolf on the attack
 					if(!attacker.getTargetLock(defender)) {
+						var hitChance;
 						if(joinpoint.method === 'getHitSeries') {
-							return joinpoint.target.rerollSeries(series, attacker.attr('attack'), 1, ATTACK.BLANK, joinpoint.target.getModifiedHitChance());
+							hitChance = joinpoint.target.getModifiedHitChance();
 						} else if(joinpoint.method === 'getCritSeries') {
-							return joinpoint.target.rerollSeries(series, attacker.attr('attack'), 1, ATTACK.BLANK, joinpoint.target.getModifiedCritChance());
+							hitChance = joinpoint.target.getModifiedCritChance();
 						} else if(joinpoint.method === 'getHitOrCritSeries') {
-							return joinpoint.target.rerollSeries(series, attacker.attr('attack'), 1, ATTACK.BLANK, joinpoint.target.getModifiedHitOrCritChance());
+							hitChance = joinpoint.target.getModifiedHitOrCritChance();
 						}
+
+						return joinpoint.target.rerollSeries(series, attacker.attr('attack'), 1, ATTACK.BLANK, hitChance);
 					}
 				}
 			}
 
 			return series;
+		});
+	}
+}
+
+export var poe_dameron = {
+	priority: 1,
+	fn: function(scope) {
+		return meld.around(scope, [ 'getFocusModifier' ], function(joinpoint) {
+			var attacker = joinpoint.target.attacker;
+			var defender = joinpoint.target.defender;
+			var currentShip = joinpoint.args[0]
+			var original = joinpoint.proceed();
+
+			//This overrides normal focus behavior, since if you are using Poe you intend to not spend the focus
+			var focusSeries;
+			if(attacker === currentShip && attacker.focus) {
+				focusSeries = joinpoint.target.binomialExperiment(attacker.attr('attack'), ATTACK.FOCUS);
+			} else if(defender === currentShip && defender.focus) {
+				focusSeries = joinpoint.target.binomialExperiment(defender.attr('agility'), AGILITY.FOCUS);
+			}
+
+			if(focusSeries) {
+				//Return chance of rolling at least one focus
+				return _.reduce(focusSeries, function(total, seriesItem, index) {
+					return index === 0 ? total : total + seriesItem;
+				}, 0);
+			} else {
+				return original;
+			}
 		});
 	}
 }

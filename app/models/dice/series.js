@@ -111,15 +111,12 @@ export default class DiceSeries {
 				}).thru(function(x) { return _.zip.apply(x, x); }).map(_.sum).value();
 			}).thru(function(x) { return _.zip.apply(x, x); }).map(_.sum).value();
 
-			var seriesVals = {
+			return {
 				index: targetDamage,
 				damage: damageProbabilities[0] || 0,
 				hit: damageProbabilities[1] || 0,
 				crit: damageProbabilities[2] || 0,
 			}
-
-			console.log(seriesVals);
-			return seriesVals;
 		});
 	}
 

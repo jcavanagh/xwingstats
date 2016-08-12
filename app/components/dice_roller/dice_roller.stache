@@ -27,8 +27,8 @@
 					Focus
 				</label>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
-					<input type="checkbox" can-click="setTargetLock" data-ship="attacker" data-target="defender" />
-					TL
+					<input type="checkbox" can-click="setTargetLock" data-ship="attacker" data-target="attacker" />
+					Target Lock
 				</label>
 				<div class="col-xs-12"><hr class="thin"></div>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
@@ -39,7 +39,10 @@
 					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="lone_wolf" data-ship="attacker" />
 					Lone Wolf
 				</label>
-				
+				<label class="checkbox col-xs-offset-3 col-xs-10">
+					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="poe_dameron" data-ship="attacker" />
+					Poe Dameron
+				</label>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
 					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="zuckuss" data-ship="attacker" />
 					Zuckuss
@@ -62,6 +65,10 @@
 				<label class="checkbox col-xs-offset-3 col-xs-10">
 					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="lone_wolf" data-ship="defender" />
 					Lone Wolf
+				</label>
+				<label class="checkbox col-xs-offset-3 col-xs-10">
+					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="poe_dameron" data-ship="defender" />
+					Poe Dameron
 				</label>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
 					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="sensor_jammer" data-ship="defender" />

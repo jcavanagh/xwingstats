@@ -21,8 +21,12 @@ export default can.Component.extend({
 			avgSeries: {}
 		},
 
-		attacker: new Pilot(),
-		defender: new Pilot(),
+		attacker: new Pilot({
+			attack: 1
+		}),
+		defender: new Pilot({
+			agility: 1
+		}),
 
 		//Combat configuration
 		config: {
