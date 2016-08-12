@@ -201,7 +201,7 @@ export default class DiceSeries {
 	getModifiedHitOrCritChance() {
 		var focusMod = this.getFocusModifier(this.attacker);
 
-		if(this.attacker.getTargetLock(this.defender)) {
+		if(this.hasTargetLock(this.attacker, this.defender)) {
 			if(focusMod) {
 				//If focused, rerolls apply only to blanks
 				return (ATTACK.BLANK * (ATTACK.HIT + ATTACK.CRIT + ATTACK.FOCUS)) + (ATTACK.HIT + ATTACK.CRIT + ATTACK.FOCUS);
@@ -217,7 +217,7 @@ export default class DiceSeries {
 	getModifiedHitChance() {
 		var focusMod = this.getFocusModifier(this.attacker);
 
-		if(this.attacker.getTargetLock(this.defender)) {
+		if(this.hasTargetLock(this.attacker, this.defender)) {
 			if(focusMod) {
 				//If focused, rerolls apply only to blanks
 				return (ATTACK.BLANK * (ATTACK.HIT + ATTACK.FOCUS)) + (ATTACK.HIT + ATTACK.FOCUS);
@@ -231,7 +231,7 @@ export default class DiceSeries {
 	}
 
 	getModifiedCritChance() {
-		if(this.attacker.getTargetLock(this.defender)) {
+		if(this.hasTargetLock(this.attacker, this.defender)) {
 			return ((1 - ATTACK.CRIT) * ATTACK.CRIT) + ATTACK.CRIT;
 		} else {
 			return ATTACK.CRIT;
@@ -252,6 +252,10 @@ export default class DiceSeries {
 
 	getFocusModifier(ship) {
 		return ship.attr('focus') ? 1 : 0;
+	}
+
+	hasTargetLock(source, destination) {
+		return source.getTargetLock(destination);
 	}
 
 	//Series rotater
