@@ -215,3 +215,39 @@ export var emperor_palpatine = {
 		});
 	}
 }
+
+//This must be the very last priority - the card reads 'Your dice cannot be modified again this attack'
+export var accuracy_corrector = {
+	priority: 100,
+	fn: function(scope) {
+		return meld.around(scope, [ 'getHitOrCritSeries' ], function(joinpoint) {
+			var attacker = joinpoint.target.attacker;
+			var defender = joinpoint.target.defender;
+			var series = joinpoint.proceed();
+
+			if(attacker.getUpgrade('accuracy_corrector')) {
+				if(joinpoint.method === 'getHitOrCritSeries') {
+					if(series.length >= 2) {
+						var zero = series[0];
+
+						//Can't ever get zero results, becomes 2 (or 1 if we only have one die)
+						series[0] = 0;
+						series[1] += zero;
+						
+						if(series.length >= 3) {
+							var one = series[1];
+
+							//Can't ever get 1 result, becomes 2
+							series[1] = 0;
+							series[2] += one;
+						}
+
+						return series;
+					}
+				}
+			}
+
+			return series;
+		});
+	}
+}

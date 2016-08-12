@@ -37,6 +37,10 @@
 				{{! Attacker Upgrades}}
 				<div class="col-xs-12"><hr class="thin"></div>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
+					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="accuracy_corrector" data-ship="attacker" />
+					Accuracy Corrector
+				</label>
+				<label class="checkbox col-xs-offset-3 col-xs-10">
 					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="emperor_palpatine" data-ship="attacker" />
 					Emperor Palpatine
 				</label>
