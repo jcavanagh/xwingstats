@@ -23,6 +23,7 @@
 
 				<div class="col-xs-12"><hr class="thin"></div>
 
+				{{! Attacker }}
 				<label class="col-xs-4 control-label">Attacker</label>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
 					<input type="checkbox" can-click="setFocus" data-ship="attacker" />
@@ -32,6 +33,8 @@
 					<input type="checkbox" can-click="setTargetLock" data-ship="attacker" data-target="attacker" />
 					Target Lock
 				</label>
+
+				{{! Attacker Upgrades}}
 				<div class="col-xs-12"><hr class="thin"></div>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
 					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="emperor_palpatine" data-ship="attacker" />
@@ -42,9 +45,19 @@
 					Lone Wolf
 				</label>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
+					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="predator_1" data-ship="attacker" />
+					Predator (1)
+				</label>
+				<label class="checkbox col-xs-offset-3 col-xs-10">
+					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="predator_2" data-ship="attacker" />
+					Predator (2)
+				</label>
+				<label class="checkbox col-xs-offset-3 col-xs-10">
 					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="zuckuss" data-ship="attacker" />
 					Zuckuss
 				</label>
+
+				{{! Attacker Pilots }}
 				<div class="col-xs-12"><hr class="thin"></div>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
 					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="han_solo_pilot" data-ship="attacker" />
@@ -55,6 +68,7 @@
 					Poe Dameron
 				</label>
 
+				{{! Defender }}
 				<label class="col-xs-4 control-label">Defender</label>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
 					<input type="checkbox" can-click="setEvade" data-ship="defender" />
@@ -64,6 +78,8 @@
 					<input type="checkbox" can-click="setFocus" data-ship="defender" />
 					Focus
 				</label>
+
+				{{! Defender Upgrades }}
 				<div class="col-xs-12"><hr class="thin"></div>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
 					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="emperor_palpatine" data-ship="defender" />
@@ -77,6 +93,8 @@
 					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="sensor_jammer" data-ship="defender" />
 					Sensor Jammer
 				</label>
+
+				{{! Defender Pilots }}
 				<div class="col-xs-12"><hr class="thin"></div>
 				<label class="checkbox col-xs-offset-3 col-xs-10">
 					<input type="checkbox" can-click="setUpgrade" data-upgrade-id="poe_dameron_pilot" data-ship="defender" />

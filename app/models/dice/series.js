@@ -75,18 +75,12 @@ export default class DiceSeries {
 		var hitOrCritSeries = this.getHitOrCritSeries();
 		var evades = this.getEvadeSeries();
 
-		console.log("DAMAGE SERIES");
-		console.log('evades:', evades);
 		//The possibility for a damage at a particular point is the chance that they damage AND do not evade
 		return _.map(_.range(numDice), function(targetDamage) {
 			var damageProbabilities = _(_.range(numDice)).map(function(damageIndex) {
 				var hitChance = hitSeries[damageIndex];
 				var critChance = critSeries[damageIndex];
 				var damageChance = hitOrCritSeries[damageIndex];
-
-				console.log('hitChance:', hitChance);
-				console.log('critChance:', critChance);
-				console.log('damageChance:', damageChance);
 
 				//The probability of a particular damage count is the sum of probabilities for that
 				//damage quantity at each level of evasion
@@ -179,17 +173,24 @@ export default class DiceSeries {
 	}
 
 	//Private helpers
-	rerollSeries(series, numDice, numRerolls, rerollChance, rerollSuccessChance) {
+	rerollSeries(numDice, numRerolls, rerollChance, rerollSuccessChance) {
+		//We can't reroll more dice than we have
+		if(numRerolls > numDice) {
+			numRerolls = numDice;
+		}
+
 		//NB: This assumes the rerollSuccessChance is the success chance implied by the original series
 		//    If those concepts disagree, the reroll expected value will not be accurate
-		var rerollableSeries = this.binomialExperiment(numDice, rerollChance);
+		//TODO: Target lock is probably just a special case of this - may want to reimplement in that way
+		var rerollableSeries = this.binomialExperiment(numRerolls, rerollChance);
 		var pctReroll = _.reduce(rerollableSeries, function(total, seriesItem, index) {
-			//Odds of rolling at least one rerollable die
+			//Odds of rolling at least N rerollable die
 			return index === 0 ? total : total + seriesItem;
 		}, 0);
-		var rerollValue = numRerolls * rerollSuccessChance * pctReroll;
 
-		return this.binomialExperiment(numDice, rerollSuccessChance + (rerollValue / numDice));
+		var rerollValue = rerollSuccessChance * (pctReroll / (numDice + 1 - numRerolls) );
+
+		return this.binomialExperiment(numDice, rerollSuccessChance + rerollValue );
 	}
 
 	binomialExperiment(dice, successChance) {

@@ -1,4 +1,5 @@
 import d3 from 'd3';
+import _ from 'lodash';
 
 export default function(el, options) {
 	var series = options.attr('series').attr();
@@ -11,6 +12,7 @@ export default function(el, options) {
 
 	//Axis for headers
 	var x0 = d3.scale.ordinal()
+		.domain(_.range(series.length))
 		.rangeRoundBands([0, innerWidth], 0.2);
 
 	//Axis for bars
