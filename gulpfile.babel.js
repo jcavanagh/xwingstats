@@ -24,6 +24,7 @@ gulp.task('webserver-prod', function() {
   gulp.src(__dirname)
 	.pipe(webserver({
 		host: 'jlcavanagh.com',
+		port: 80,
 		fallback: 'index.html',
 		livereload: false,
 		directoryListing: false
