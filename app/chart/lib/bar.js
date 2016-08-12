@@ -21,6 +21,30 @@ export default function(el, options) {
 	var y = d3.scale.linear()
 		.range([innerHeight, 0]);
 
+	//Generate data series keys
+	var seriesKeys = _.filter(_.keys(series[0]), function(val) { return val !== 'index'; });
+
+	//Transform the dice series into named items, and store on series as a sub-series
+	_.each(series, function(item) {
+		item.transformed = _.map(seriesKeys, function(key) {
+			return {
+				key: key,
+				val: item[key]
+			}
+		});
+	});
+
+	var seriesMax = d3.max(series, function(d) {
+		return d3.max(d.transformed, function(dd) {
+			return dd.val;
+		});
+	});
+	//Round up to next multiple of 10-percent
+	seriesMax = Math.ceil(seriesMax * 10) / 10;
+
+	x1.domain(seriesKeys).rangeRoundBands([0, x0.rangeBand()]);
+	y.domain([0, seriesMax]);
+
 	//Axes
 	var xAxis = d3.svg.axis()
 		.scale(x0)
@@ -29,7 +53,7 @@ export default function(el, options) {
 	var yAxis = d3.svg.axis()
 		.scale(y)
 		.orient("left")
-		.tickFormat(d3.format(".2p"));
+		.tickFormat(d3.format("p"));
 
 	//Actual chart
 	var svgEl = d3.select(el.find('svg').get(0));
@@ -51,28 +75,6 @@ export default function(el, options) {
 	svg.append("g")
 		.attr("class", "y axis")
 		.call(yAxis);
-
-	//Generate data series keys
-	var seriesKeys = _.filter(_.keys(series[0]), function(val) { return val !== 'index'; });
-
-	//Transform the dice series into named items, and store on series as a sub-series
-	_.each(series, function(item) {
-		item.transformed = _.map(seriesKeys, function(key) {
-			return {
-				key: key,
-				val: item[key]
-			}
-		});
-	});
-
-	x0.domain(_.map(series, function(d) { return d.index; }));
-	x1.domain(seriesKeys).rangeRoundBands([0, x0.rangeBand()]);
-	//FIXME: Scale Y axis to size
-	// y.domain([0, d3.max(series, function(d) {
-	// 	return d3.max(d.transformed, function(dd) {
-	// 		return dd.val;
-	// 	});
-	// })]);
 
 	var index = svg.selectAll(".index")
 		.data(series)

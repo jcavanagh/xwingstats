@@ -260,12 +260,21 @@ export default class DiceSeries {
 	}
 
 	//Series rotater
+	rotateRight(series) {
+		//Rotate right 1
+		series.unshift(series.pop());
+	}
+
+	rotateLeft(series) {
+		//Rotate left 1
+		series.push(series.shift());
+	}
+
 	smushRight(series) {
 		//Zero- or one-length series are not valid
 		if(!series || !series.length || series.length == 1) { return; }
 
-		//Rotate right 1
-		series.unshift(series.pop());
+		this.rotateRight(series);
 
 		///Combine best and rotated second best
 		var last = series.length - 1;
@@ -279,12 +288,11 @@ export default class DiceSeries {
 		//Zero- or one-length series are not valid
 		if(!series || !series.length || series.length == 1) { return; }
 
-		//Rotate left 1
-		series.push(series.shift());
+		this.rotateLeft(series);
 
 		///Combine worst and rotated second worst
 		var last = series.length - 1;
-		series[last] = series[0] + series[last];
+		series[0] = series[0] + series[1];
 
 		//Zero out last
 		series[last] = 0;
