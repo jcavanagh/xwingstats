@@ -92,20 +92,22 @@ function predatorFactory(predatorDice) {
 			var defender = joinpoint.target.defender;
 			var series = joinpoint.proceed();
 
-			if(joinpoint.method === 'getHitSeries' || joinpoint.method === 'getCritSeries' || joinpoint.method === 'getHitOrCritSeries') {
-				//Due to the no-multi-reroll rule, target locks supersede this on the attack
-				if(!joinpoint.target.hasTargetLock(attacker, defender)) {
-					var hitChance;
-					var rerollChance = attacker.focus ? ATTACK.BLANK : ATTACK.BLANK + ATTACK.FOCUS;
-					if(joinpoint.method === 'getHitSeries') {
-						hitChance = joinpoint.target.getModifiedHitChance();
-					} else if(joinpoint.method === 'getCritSeries') {
-						hitChance = joinpoint.target.getModifiedCritChance();
-					} else if(joinpoint.method === 'getHitOrCritSeries') {
-						hitChance = joinpoint.target.getModifiedHitOrCritChance();
-					}
+			if(attacker.getUpgrade('predator')) {
+				if(joinpoint.method === 'getHitSeries' || joinpoint.method === 'getCritSeries' || joinpoint.method === 'getHitOrCritSeries') {
+					//Due to the no-multi-reroll rule, target locks supersede this on the attack
+					if(!joinpoint.target.hasTargetLock(attacker, defender)) {
+						var hitChance;
+						var rerollChance = attacker.focus ? ATTACK.BLANK : ATTACK.BLANK + ATTACK.FOCUS;
+						if(joinpoint.method === 'getHitSeries') {
+							hitChance = joinpoint.target.getModifiedHitChance();
+						} else if(joinpoint.method === 'getCritSeries') {
+							hitChance = joinpoint.target.getModifiedCritChance();
+						} else if(joinpoint.method === 'getHitOrCritSeries') {
+							hitChance = joinpoint.target.getModifiedHitOrCritChance();
+						}
 
-					return joinpoint.target.rerollSeries(attacker.attr('attack'), predatorDice, rerollChance, hitChance);
+						return joinpoint.target.rerollSeries(attacker.attr('attack'), predatorDice, rerollChance, hitChance);
+					}
 				}
 			}
 
@@ -133,31 +135,33 @@ export var han_solo_pilot = {
 			var sourceShip = joinpoint.args[0]
 			var series = joinpoint.proceed();
 
-			//Target lock is strictly better than Han
-			if(!joinpoint.target.hasTargetLock(attacker, defender)) {
-				//FIXME: Should the code below use a weighted comparison between probability bands?  Currently is very staircase-like
-				var hanUsedPct;
-				if(joinpoint.method === 'getHitSeries') {
-					//Here we assume you'll use a Han reroll when your rolled hits are less than 3/8 of your dice, the expectation on bare dice
-					hanUsedPct = _.reduce(series, function(total, seriesItem, index) {
-						return ( index < (attacker.attr('attack') * 3/8) ) ? total : total + seriesItem;
-					}, 0);
+			if(attacker.getUpgrade('han_solo_pilot')) {
+				//Target lock is strictly better than Han
+				if(!joinpoint.target.hasTargetLock(attacker, defender)) {
+					//FIXME: Should the code below use a weighted comparison between probability bands?  Currently is very staircase-like
+					var hanUsedPct;
+					if(joinpoint.method === 'getHitSeries') {
+						//Here we assume you'll use a Han reroll when your rolled hits are less than 3/8 of your dice, the expectation on bare dice
+						hanUsedPct = _.reduce(series, function(total, seriesItem, index) {
+							return ( index < (attacker.attr('attack') * 3/8) ) ? total : total + seriesItem;
+						}, 0);
 
-					return joinpoint.target.rerollSeries(attacker.attr('attack'), attacker.attr('attack'), hanUsedPct, joinpoint.target.getModifiedHitChance());
-				} else if(joinpoint.method === 'getCritSeries') {
-					//Here we assume you'll use a Han reroll if your rolled crits are less than 1/8 of your dice, the expectation on bare dice
-					hanUsedPct = _.reduce(series, function(total, seriesItem, index) {
-						return ( index < (attacker.attr('attack') / 4) ) ? total : total + seriesItem;
-					}, 0);
+						return joinpoint.target.rerollSeries(attacker.attr('attack'), attacker.attr('attack'), hanUsedPct, joinpoint.target.getModifiedHitChance());
+					} else if(joinpoint.method === 'getCritSeries') {
+						//Here we assume you'll use a Han reroll if your rolled crits are less than 1/8 of your dice, the expectation on bare dice
+						hanUsedPct = _.reduce(series, function(total, seriesItem, index) {
+							return ( index < (attacker.attr('attack') / 4) ) ? total : total + seriesItem;
+						}, 0);
 
-					return joinpoint.target.rerollSeries(attacker.attr('attack'), attacker.attr('attack'), hanUsedPct, joinpoint.target.getModifiedCritChance());
-				} else if(joinpoint.method === 'getHitOrCritSeries') {
-					//Combining the above, sort of - assume we Han reroll if the total of hits and crits is less than half of your dice
-					hanUsedPct = _.reduce(series, function(total, seriesItem, index) {
-						return ( index < (attacker.attr('attack') / 2) ) ? total : total + seriesItem;
-					}, 0);
+						return joinpoint.target.rerollSeries(attacker.attr('attack'), attacker.attr('attack'), hanUsedPct, joinpoint.target.getModifiedCritChance());
+					} else if(joinpoint.method === 'getHitOrCritSeries') {
+						//Combining the above, sort of - assume we Han reroll if the total of hits and crits is less than half of your dice
+						hanUsedPct = _.reduce(series, function(total, seriesItem, index) {
+							return ( index < (attacker.attr('attack') / 2) ) ? total : total + seriesItem;
+						}, 0);
 
-					return joinpoint.target.rerollSeries(attacker.attr('attack'), attacker.attr('attack'), hanUsedPct, joinpoint.target.getModifiedHitOrCritChance());
+						return joinpoint.target.rerollSeries(attacker.attr('attack'), attacker.attr('attack'), hanUsedPct, joinpoint.target.getModifiedHitOrCritChance());
+					}
 				}
 			}
 
@@ -172,7 +176,11 @@ export var zuckuss = {
 		return meld.around(scope, [ 'getModifiedEvadeChance' ], function(joinpoint) {
 			var evadeChance = joinpoint.proceed();
 
-			return Math.pow(evadeChance, 2);
+			if(attacker.getUpgrade('zuckuss')) {
+				return Math.pow(evadeChance, 2);
+			}
+
+			return evadeChance;
 		});
 	}
 }
