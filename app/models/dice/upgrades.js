@@ -7,6 +7,7 @@ export var sensor_jammer = {
 	fn: function(scope) {
 		return meld.around(scope, [ 'getHitOrCritSeries', 'getHitSeries' ], function(joinpoint) {
 			var attacker = joinpoint.target.attacker;
+			var defender = joinpoint.target.defender;
 			var series = joinpoint.proceed();
 
 			//Sensor jammer effectively removes an attack die if the attacker is not focused
@@ -174,6 +175,7 @@ export var zuckuss = {
 	priority: 98,
 	fn: function(scope) {
 		return meld.around(scope, [ 'getModifiedEvadeChance' ], function(joinpoint) {
+			var attacker = joinpoint.target.attacker;
 			var evadeChance = joinpoint.proceed();
 
 			if(attacker.getUpgrade('zuckuss')) {

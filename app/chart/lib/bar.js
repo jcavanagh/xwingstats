@@ -43,7 +43,8 @@ export default function(el, options) {
 	seriesMax = Math.ceil(seriesMax * 10) / 10;
 
 	x1.domain(seriesKeys).rangeRoundBands([0, x0.rangeBand()]);
-	y.domain([0, seriesMax]);
+	//TODO: Uncomment this to scale chart
+	// y.domain([0, seriesMax]);
 
 	//Axes
 	var xAxis = d3.svg.axis()
