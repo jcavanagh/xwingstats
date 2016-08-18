@@ -72,7 +72,7 @@ export default class DiceSeries {
 		var numDice = this.attacker.attr('attack') + 1;
 		var hitSeries = this.getHitSeries();
 		var critSeries = this.getCritSeries();
-		var hitOrCritSeries = this.getHitOrCritSeries();
+		var damageSeries = this.getDamageSeries();
 		var evades = this.getEvadeSeries();
 
 		//The possibility for a damage at a particular point is the chance that they damage AND do not evade
@@ -80,7 +80,7 @@ export default class DiceSeries {
 			var damageProbabilities = _(_.range(numDice)).map(function(damageIndex) {
 				var hitChance = hitSeries[damageIndex];
 				var critChance = critSeries[damageIndex];
-				var damageChance = hitOrCritSeries[damageIndex];
+				var damageChance = damageSeries[damageIndex];
 
 				//The probability of a particular damage count is the sum of probabilities for that
 				//damage quantity at each level of evasion
@@ -144,7 +144,7 @@ export default class DiceSeries {
 	}
 
 	//Binomial probability generators
-	getHitOrCritSeries() {
+	getDamageSeries() {
 		var modifiedHitOrCritChance = this.getModifiedHitOrCritChance();
 		var atk = this.attacker.attr('attack');
 

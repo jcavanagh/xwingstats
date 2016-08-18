@@ -5,7 +5,7 @@ import * as Stats from 'app/math/stats';
 export var sensor_jammer = {
 	priority: 1,
 	fn: function(scope) {
-		return meld.around(scope, [ 'getHitOrCritSeries', 'getHitSeries' ], function(joinpoint) {
+		return meld.around(scope, [ 'getDamageSeries', 'getHitSeries' ], function(joinpoint) {
 			var attacker = joinpoint.target.attacker;
 			var defender = joinpoint.target.defender;
 			var series = joinpoint.proceed();
@@ -52,7 +52,7 @@ export var poe_dameron_pilot = {
 export var lone_wolf = {
 	priority: 3,
 	fn: function(scope) {
-		return meld.around(scope, [ 'getHitOrCritSeries', 'getHitSeries', 'getCritSeries', 'getEvadeSeries'], function(joinpoint) {
+		return meld.around(scope, [ 'getDamageSeries', 'getHitSeries', 'getCritSeries', 'getEvadeSeries'], function(joinpoint) {
 			var attacker = joinpoint.target.attacker;
 			var defender = joinpoint.target.defender;
 			var series = joinpoint.proceed();
@@ -63,7 +63,7 @@ export var lone_wolf = {
 					//If we roll a blank, we can reroll one with Lone Wolf
 					return joinpoint.target.rerollSeries(defender.attr('agility'), 1, AGILITY.BLANK, joinpoint.target.getModifiedEvadeChance());
 				}
-			} else if(joinpoint.method === 'getHitSeries' || joinpoint.method === 'getCritSeries' || joinpoint.method === 'getHitOrCritSeries') {
+			} else if(joinpoint.method === 'getHitSeries' || joinpoint.method === 'getCritSeries' || joinpoint.method === 'getDamageSeries') {
 				if(attacker.getUpgrade('lone_wolf')) {
 					//Due to the no-multi-reroll rule, target locks supersede this on the attack
 					if(!joinpoint.target.hasTargetLock(attacker, defender)) {
@@ -72,7 +72,7 @@ export var lone_wolf = {
 							hitChance = joinpoint.target.getModifiedHitChance();
 						} else if(joinpoint.method === 'getCritSeries') {
 							hitChance = joinpoint.target.getModifiedCritChance();
-						} else if(joinpoint.method === 'getHitOrCritSeries') {
+						} else if(joinpoint.method === 'getDamageSeries') {
 							hitChance = joinpoint.target.getModifiedHitOrCritChance();
 						}
 
@@ -88,13 +88,13 @@ export var lone_wolf = {
 
 function predatorFactory(predatorDice) {
 	return function(scope) {
-		return meld.around(scope, [ 'getHitOrCritSeries', 'getHitSeries', 'getCritSeries'], function(joinpoint) {
+		return meld.around(scope, [ 'getDamageSeries', 'getHitSeries', 'getCritSeries'], function(joinpoint) {
 			var attacker = joinpoint.target.attacker;
 			var defender = joinpoint.target.defender;
 			var series = joinpoint.proceed();
 
-			if(attacker.getUpgrade('predator')) {
-				if(joinpoint.method === 'getHitSeries' || joinpoint.method === 'getCritSeries' || joinpoint.method === 'getHitOrCritSeries') {
+			if(attacker.getUpgrade('predator_' + predatorDice)) {
+				if(joinpoint.method === 'getHitSeries' || joinpoint.method === 'getCritSeries' || joinpoint.method === 'getDamageSeries') {
 					//Due to the no-multi-reroll rule, target locks supersede this on the attack
 					if(!joinpoint.target.hasTargetLock(attacker, defender)) {
 						var hitChance;
@@ -103,7 +103,7 @@ function predatorFactory(predatorDice) {
 							hitChance = joinpoint.target.getModifiedHitChance();
 						} else if(joinpoint.method === 'getCritSeries') {
 							hitChance = joinpoint.target.getModifiedCritChance();
-						} else if(joinpoint.method === 'getHitOrCritSeries') {
+						} else if(joinpoint.method === 'getDamageSeries') {
 							hitChance = joinpoint.target.getModifiedHitOrCritChance();
 						}
 
@@ -130,7 +130,7 @@ export var predator_2 = {
 export var han_solo_pilot = {
 	priority: 97,
 	fn: function(scope) {
-		return meld.around(scope, [ 'getHitSeries', 'getCritSeries', 'getHitOrCritSeries' ], function(joinpoint) {
+		return meld.around(scope, [ 'getHitSeries', 'getCritSeries', 'getDamageSeries' ], function(joinpoint) {
 			var attacker = joinpoint.target.attacker;
 			var defender = joinpoint.target.defender;
 			var sourceShip = joinpoint.args[0]
@@ -155,7 +155,7 @@ export var han_solo_pilot = {
 						}, 0);
 
 						return joinpoint.target.rerollSeries(attacker.attr('attack'), attacker.attr('attack'), hanUsedPct, joinpoint.target.getModifiedCritChance());
-					} else if(joinpoint.method === 'getHitOrCritSeries') {
+					} else if(joinpoint.method === 'getDamageSeries') {
 						//Combining the above, sort of - assume we Han reroll if the total of hits and crits is less than half of your dice
 						hanUsedPct = _.reduce(series, function(total, seriesItem, index) {
 							return ( index < (attacker.attr('attack') / 2) ) ? total : total + seriesItem;
@@ -190,7 +190,7 @@ export var zuckuss = {
 export var emperor_palpatine = {
 	priority: 99,
 	fn: function(scope) {
-		return meld.around(scope, [ 'getHitOrCritSeries', 'getCritSeries', 'getEvadeSeries' ], function(joinpoint) {
+		return meld.around(scope, [ 'getDamageSeries', 'getCritSeries', 'getEvadeSeries' ], function(joinpoint) {
 			var attacker = joinpoint.target.attacker;
 			var defender = joinpoint.target.defender;
 			var series = joinpoint.proceed();
@@ -200,7 +200,7 @@ export var emperor_palpatine = {
 				if(defender.getUpgrade('emperor_palpatine')) {
 					joinpoint.target.smushRight(series);
 				}
-			} else if(joinpoint.method === 'getCritSeries' || joinpoint.method === 'getHitOrCritSeries') {
+			} else if(joinpoint.method === 'getCritSeries' || joinpoint.method === 'getDamageSeries') {
 				if(attacker.getUpgrade('emperor_palpatine')) {
 					joinpoint.target.smushRight(series);
 				}
@@ -211,23 +211,23 @@ export var emperor_palpatine = {
 	}
 }
 
-//This must be the very last priority - the card reads 'Your dice cannot be modified again this attack'
+//This must be the very last dice modification - the card reads 'Your dice cannot be modified again this attack'
 export var accuracy_corrector = {
 	priority: 100,
 	fn: function(scope) {
-		return meld.around(scope, [ 'getHitOrCritSeries' ], function(joinpoint) {
+		return meld.around(scope, [ 'getHitSeries', 'getCritSeries', 'getDamageSeries' ], function(joinpoint) {
 			var attacker = joinpoint.target.attacker;
 			var defender = joinpoint.target.defender;
 			var series = joinpoint.proceed();
 
 			if(attacker.getUpgrade('accuracy_corrector')) {
-				if(joinpoint.method === 'getHitOrCritSeries') {
+				if(joinpoint.method === 'getDamageSeries' || joinpoint.method === 'getHitSeries') {
 					if(series.length >= 2) {
 						var zero = series[0];
 
 						//Can't ever get zero results, becomes 2 (or 1 if we only have one die)
 						series[0] = 0;
-						series[1] += zero;
+						series[1] += zero; 
 						
 						if(series.length >= 3) {
 							var one = series[1];
@@ -239,6 +239,28 @@ export var accuracy_corrector = {
 
 						return series;
 					}
+				} else if(joinpoint.method === 'getCritSeries') {
+					series[0] = series[0] ? 0 : series[0];
+					series[1] = series[1] ? 0 : series[1];
+				}
+			}
+
+			return series;
+		});
+	}
+}
+
+export var twin_laser_turret = {
+	priority: 101,
+	fn: function(scope) {
+		return meld.around(scope, [ 'getDamageSeries' ], function(joinpoint) {
+			var attacker = joinpoint.target.attacker;
+			var defender = joinpoint.target.defender;
+			var series = joinpoint.proceed();
+
+			if(attacker.getUpgrade('twin_laser_turret')) {
+				if(joinpoint.method === 'getDamageSeries') {
+					//All numbers above 1 become 1
 				}
 			}
 
