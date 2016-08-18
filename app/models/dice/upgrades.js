@@ -190,7 +190,7 @@ export var zuckuss = {
 export var emperor_palpatine = {
 	priority: 99,
 	fn: function(scope) {
-		return meld.around(scope, [ 'getHitSeries', 'getHitOrCritSeries', 'getCritSeries', 'getEvadeSeries' ], function(joinpoint) {
+		return meld.around(scope, [ 'getHitOrCritSeries', 'getCritSeries', 'getEvadeSeries' ], function(joinpoint) {
 			var attacker = joinpoint.target.attacker;
 			var defender = joinpoint.target.defender;
 			var series = joinpoint.proceed();
@@ -200,14 +200,9 @@ export var emperor_palpatine = {
 				if(defender.getUpgrade('emperor_palpatine')) {
 					joinpoint.target.smushRight(series);
 				}
-			} else if(joinpoint.method === 'getHitSeries' || joinpoint.method === 'getCritSeries' || joinpoint.method === 'getHitOrCritSeries') {
+			} else if(joinpoint.method === 'getCritSeries' || joinpoint.method === 'getHitOrCritSeries') {
 				if(attacker.getUpgrade('emperor_palpatine')) {
-					if(joinpoint.method === 'getHitSeries') {
-						//If Palpatine changes the result to a crit, that also shifts the hit series
-						joinpoint.target.smushLeft(series);
-					} else {
-						joinpoint.target.smushRight(series);
-					}
+					joinpoint.target.smushRight(series);
 				}
 			}
 
